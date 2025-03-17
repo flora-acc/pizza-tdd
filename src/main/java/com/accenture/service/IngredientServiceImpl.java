@@ -2,12 +2,13 @@ package com.accenture.service;
 
 import com.accenture.exception.IngredientException;
 import com.accenture.repository.IngredientDao;
-import com.accenture.repository.model.Ingredient;
 import com.accenture.service.dto.IngredientRequest;
 import com.accenture.service.dto.IngredientResponse;
 import com.accenture.service.mapper.IngredientMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +23,13 @@ public class IngredientServiceImpl implements IngredientService {
         return ingredientMapper.toIngredientResponse(
                 ingredientDao.save(
                         ingredientMapper.toIngredient(ingredientRequest)));
+    }
+
+    @Override
+    public List<IngredientResponse> afficherTousIngredients() throws IngredientException{
+        return ingredientDao.findAll().stream()
+                .map(ingredient -> ingredientMapper.toIngredientResponse(ingredient))
+                .toList();
     }
 
 //    *************************************************************************

@@ -6,10 +6,9 @@ import com.accenture.service.dto.IngredientResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/ingredients")
@@ -29,5 +28,12 @@ public class IngredientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ingredientResponse);
     }
 
+    @GetMapping
+    List<IngredientResponse> afficherTousIngredients() {
+        log.info("Requête reçue pour récupérer la liste des ingrédients.");
+        List<IngredientResponse> ingredients = ingredientService.afficherTousIngredients();
+        log.debug("Nombre d'ingrédients trouvés' : {}", ingredients.size());
+        return ingredients;
+    }
 
 }
