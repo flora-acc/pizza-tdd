@@ -1,4 +1,4 @@
-package com.accenture.controller;
+package com.accenture.shared;
 
 import java.time.LocalDate;
 
