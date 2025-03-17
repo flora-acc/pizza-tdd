@@ -50,4 +50,27 @@ class IngredientControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("La quantité doit être supérieure ou égale à 0"));
     }
+
+    @Test
+    void testTrouverParIdCorrect() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/ingredients/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.nom").value("Emmental"));
+    }
+
+    @Test
+    void testTrouverParIdIncorrect() throws Exception{
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/ingredients/6")
+                                .contentType(MediaType.APPLICATION_JSON)
+
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("L'id n'existe pas en base"));
+    }
 }
