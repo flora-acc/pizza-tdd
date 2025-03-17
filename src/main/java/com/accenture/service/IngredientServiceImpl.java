@@ -18,6 +18,17 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public IngredientResponse ajouter(IngredientRequest ingredientRequest) {
+        verificationIngredient(ingredientRequest);
+        return ingredientMapper.toIngredientResponse(
+                ingredientDao.save(
+                        ingredientMapper.toIngredient(ingredientRequest)));
+    }
+
+//    *************************************************************************
+//    ************************ METHODES PRIVEES *******************************
+//    *************************************************************************
+
+    private static void verificationIngredient(IngredientRequest ingredientRequest) {
         if (ingredientRequest == null)
             throw new IngredientException("L'ingrédient est null");
         if (ingredientRequest.quantite() == null)
@@ -26,10 +37,5 @@ public class IngredientServiceImpl implements IngredientService {
             throw new IngredientException("La quantité doit être supérieure ou égale à 0");
         if (ingredientRequest.nom() == null || ingredientRequest.nom().isBlank())
             throw new IngredientException("Le nom est obligatoire");
-
-
-        Ingredient ingredient = ingredientMapper.toIngredient(ingredientRequest);
-        Ingredient reponse = ingredientDao.save(ingredient);
-        return ingredientMapper.toIngredientResponse(reponse);
     }
 }
