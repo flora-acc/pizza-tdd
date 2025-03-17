@@ -5,4 +5,5 @@ import com.accenture.service.dto.IngredientResponse;
 
 public interface IngredientService {
     IngredientResponse ajouter(IngredientRequest ingredientRequest);
+    IngredientResponse trouverParId(int id);
 }

@@ -6,6 +6,7 @@ import com.accenture.repository.model.Ingredient;
 import com.accenture.service.dto.IngredientRequest;
 import com.accenture.service.dto.IngredientResponse;
 import com.accenture.service.mapper.IngredientMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class IngredientImplTest {
@@ -79,5 +82,22 @@ class IngredientImplTest {
 
     }
 
+    @Test
+    void testTrouverParIdAvecIdIntrouvable() {
+        Mockito.when(ingredientDao.findById(1)).thenReturn(Optional.empty());
+        EntityNotFoundException ex = Assertions.assertThrows(EntityNotFoundException.class, () -> ingredientServiceImpl.trouverParId(1));
+        Assertions.assertEquals("L'id n'existe pas en base", ex.getMessage());
+    }
+
+    @Test
+    void testTrouverParIdOk() {
+        Ingredient tomate = new Ingredient(1, "Tomate", 3);
+        IngredientResponse tomateReponse = new IngredientResponse(1, "Tomate", 3);
+
+        Mockito.when(ingredientDao.findById(1)).thenReturn(Optional.of(tomate));
+        Mockito.when(ingredientMapperMock.toIngredientResponse(tomate)).thenReturn(tomateReponse);
+
+        Assertions.assertEquals(tomateReponse, ingredientServiceImpl.trouverParId(1));
+    }
 
 }

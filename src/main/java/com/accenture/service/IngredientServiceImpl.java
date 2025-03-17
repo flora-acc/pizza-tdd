@@ -6,8 +6,11 @@ import com.accenture.repository.model.Ingredient;
 import com.accenture.service.dto.IngredientRequest;
 import com.accenture.service.dto.IngredientResponse;
 import com.accenture.service.mapper.IngredientMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +26,15 @@ public class IngredientServiceImpl implements IngredientService {
                 ingredientDao.save(
                         ingredientMapper.toIngredient(ingredientRequest)));
     }
+
+    @Override
+    public IngredientResponse trouverParId(int id) {
+        Optional<Ingredient> optIngredient = ingredientDao.findById(id);
+        if (optIngredient.isEmpty())
+            throw new EntityNotFoundException("L'id n'existe pas en base");
+        return ingredientMapper.toIngredientResponse(optIngredient.get());
+    }
+
 
 //    *************************************************************************
 //    ************************ METHODES PRIVEES *******************************
