@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/ingredients")
@@ -42,5 +45,12 @@ public class IngredientController {
         return ResponseEntity.ok(ingredientResponse);
     }
 
+    @GetMapping
+    List<IngredientResponse> afficherTousIngredients() {
+        log.info("Requête reçue pour récupérer la liste des ingrédients.");
+        List<IngredientResponse> ingredients = ingredientService.afficherTousIngredients();
+        log.debug("Nombre d'ingrédients trouvés' : {}", ingredients.size());
+        return ingredients;
+    }
 
 }

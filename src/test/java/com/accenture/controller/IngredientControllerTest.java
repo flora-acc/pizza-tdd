@@ -1,9 +1,12 @@
 package com.accenture.controller;
 
 
+import com.accenture.repository.model.Ingredient;
 import com.accenture.service.dto.IngredientRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
@@ -11,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.MethodName.class)
 class IngredientControllerTest {
 
 
@@ -49,6 +56,14 @@ class IngredientControllerTest {
                                 .content(objectMapper.writeValueAsString(ingredientRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("La quantité doit être supérieure ou égale à 0"));
+    }
+
+    @Test
+    void atestAfficherTousIngredients() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/ingredients"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2));
     }
 
     @Test
