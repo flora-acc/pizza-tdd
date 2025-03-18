@@ -1,4 +1,4 @@
-package com.accenture.service;
+package com.accenture.service.Interface;
 
 import com.accenture.exception.IngredientException;
 import com.accenture.service.dto.IngredientRequest;

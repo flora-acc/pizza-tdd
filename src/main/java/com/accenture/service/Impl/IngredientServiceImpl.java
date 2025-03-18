@@ -1,23 +1,27 @@
-package com.accenture.service;
+package com.accenture.service.Impl;
 
 import com.accenture.exception.IngredientException;
 import com.accenture.repository.IngredientDao;
 import com.accenture.repository.model.Ingredient;
+import com.accenture.service.Interface.IngredientService;
 import com.accenture.service.dto.IngredientRequest;
 import com.accenture.service.dto.IngredientResponse;
 import com.accenture.service.mapper.IngredientMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class IngredientServiceImpl implements IngredientService {
 
+    public static final String ERREUR_VERIFICATION_INGREDIENT = "Erreur verification Ingrédient : {}";
     private IngredientDao ingredientDao;
     private IngredientMapper ingredientMapper;
 
@@ -39,7 +43,7 @@ public class IngredientServiceImpl implements IngredientService {
 
 
     @Override
-    public List<IngredientResponse> afficherTousIngredients() throws IngredientException{
+    public List<IngredientResponse> afficherTousIngredients() throws IngredientException {
         return ingredientDao.findAll().stream()
                 .map(ingredient -> ingredientMapper.toIngredientResponse(ingredient))
                 .toList();
@@ -62,14 +66,30 @@ public class IngredientServiceImpl implements IngredientService {
 //    *************************************************************************
 
     private static void verificationIngredient(IngredientRequest ingredientRequest) {
-        if (ingredientRequest == null)
-            throw new IngredientException("L'ingrédient est null");
-        if (ingredientRequest.quantite() == null)
-            throw new IngredientException("La quantité est obligatoire");
-        if (ingredientRequest.quantite() < 0)
-            throw new IngredientException("La quantité doit être supérieure ou égale à 0");
-        if (ingredientRequest.nom() == null || ingredientRequest.nom().isBlank())
-            throw new IngredientException("Le nom est obligatoire");
+        String message = "";
+        if (ingredientRequest == null) {
+            message = "L'ingrédient est null";
+            log.error(ERREUR_VERIFICATION_INGREDIENT, message);
+            throw new IngredientException(message);
+        }
+        if (ingredientRequest.quantite() == null) {
+            message = "La quantité est obligatoire";
+            log.error(ERREUR_VERIFICATION_INGREDIENT, message);
+            throw new IngredientException(message);
+        }
+
+        if (ingredientRequest.quantite() < 0) {
+            message = "La quantité doit être supérieure ou égale à 0";
+            log.error(ERREUR_VERIFICATION_INGREDIENT, message);
+            throw new IngredientException(message);
+        }
+
+        if (ingredientRequest.nom() == null || ingredientRequest.nom().isBlank()){
+            message = "Le nom est obligatoire";
+            log.error(ERREUR_VERIFICATION_INGREDIENT, message);
+            throw new IngredientException(message);
+        }
+
     }
 
     private static void remplacer(IngredientRequest ingredientRequest, Ingredient ingredientExistant) {
