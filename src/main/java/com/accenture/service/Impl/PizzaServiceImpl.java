@@ -29,9 +29,7 @@ public class PizzaServiceImpl implements PizzaService {
     @Override
     public PizzaResponseDto ajouter(PizzaRequest pizzaRequest) {
         verifierPizza(pizzaRequest);
-
         return toPizzaResponse(pizzaDao.save(toPizza(pizzaRequest)));
-
 
     }
 
@@ -106,6 +104,7 @@ public class PizzaServiceImpl implements PizzaService {
             }
             ingredients.add(optionalIngredient.get());
         }
+
         Pizza pizza = new Pizza();
         pizza.setNom(pizzaRequest.nom());
         pizza.setIngredients(ingredients);
