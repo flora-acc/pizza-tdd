@@ -92,7 +92,18 @@ public class IngredientController {
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle"),
     })
     @PatchMapping("/{id}")
-    ResponseEntity<IngredientResponse> modifierIngredientPartiellement(@PathVariable int id, @RequestBody IngredientRequest ingredientRequest){
+    ResponseEntity<IngredientResponse> modifierIngredientPartiellement(@PathVariable int id, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Ingrédient Création", required = true,
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = IngredientRequest.class),
+                    examples = @ExampleObject(value = """
+                            {
+                            
+                            "nom": "Tomate",
+                              "quantite": 3
+                            }
+                            """
+                    )))@RequestBody IngredientRequest ingredientRequest){
         log.info("Requête reçue pour récupérer un ingrédient.");
         IngredientResponse reponse = ingredientService.modifierPartiellementIngredient(id, ingredientRequest);
         return ResponseEntity.ok(reponse);
