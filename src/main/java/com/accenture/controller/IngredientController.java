@@ -1,7 +1,6 @@
 package com.accenture.controller;
 
-import com.accenture.repository.model.Ingredient;
-import com.accenture.service.IngredientService;
+import com.accenture.service.Interface.IngredientService;
 import com.accenture.service.dto.IngredientRequest;
 import com.accenture.service.dto.IngredientResponse;
 import io.swagger.v3.oas.annotations.Operation;
