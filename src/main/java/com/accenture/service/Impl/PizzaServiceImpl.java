@@ -9,11 +9,9 @@ import com.accenture.repository.model.Pizza;
 import com.accenture.service.Interface.PizzaService;
 import com.accenture.service.dto.PizzaRequest;
 import com.accenture.service.dto.PizzaResponseDto;
-import com.accenture.shared.Taille;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

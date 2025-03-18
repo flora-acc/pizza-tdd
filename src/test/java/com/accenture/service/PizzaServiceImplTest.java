@@ -40,8 +40,8 @@ class PizzaServiceImplTest {
 
     @Test
     void testAjoutPizzaNomNull() {
-        EnumMap<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
-        mapPrix.put(Taille.PETIT, 10.00);
+       Map<Taille, Double> mapPrix = new HashMap<>();
+        mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
         PizzaRequest pizzaRequest = new PizzaRequest(null, List.of(1, 2, 3), mapPrix);
@@ -51,8 +51,8 @@ class PizzaServiceImplTest {
 
     @Test
     void testAjoutPizzaNomBlank() {
-        EnumMap<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
-        mapPrix.put(Taille.PETIT, 10.00);
+       Map<Taille, Double> mapPrix = new HashMap<>();
+        mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
         PizzaRequest pizzaRequest = new PizzaRequest("", List.of(1, 2, 3), mapPrix);
@@ -62,8 +62,8 @@ class PizzaServiceImplTest {
 
     @Test
     void testAjoutPizzaListNull() {
-        EnumMap<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
-        mapPrix.put(Taille.PETIT, 10.00);
+       Map<Taille, Double> mapPrix = new HashMap<>();
+        mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
         PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", null, mapPrix);
@@ -73,8 +73,8 @@ class PizzaServiceImplTest {
 
     @Test
     void testAjoutPizzaListInferior2() {
-        EnumMap<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
-        mapPrix.put(Taille.PETIT, 10.00);
+     Map<Taille, Double> mapPrix = new HashMap<>();
+        mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
         PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1), mapPrix);
@@ -91,8 +91,8 @@ class PizzaServiceImplTest {
 
     @Test
     void testAjoutPizzaPrixNotComplete() {
-        EnumMap<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
-        mapPrix.put(Taille.PETIT, 10.00);
+        Map<Taille, Double> mapPrix = new HashMap<>();
+        mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
 
         PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);
@@ -102,8 +102,8 @@ class PizzaServiceImplTest {
 
     @Test
     void testAjoutPizzaIngredientIntrouvable() {
-        EnumMap<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
-        mapPrix.put(Taille.PETIT, 10.00);
+        Map<Taille, Double> mapPrix = new HashMap<>();
+        mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
         PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);
@@ -115,8 +115,8 @@ class PizzaServiceImplTest {
 
     @Test
     void testAjoutPizzaPrixTailleNull() {
-        EnumMap<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
-        mapPrix.put(Taille.PETIT, 10.00);
+     Map<Taille, Double> mapPrix = new HashMap<>();
+        mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, null);
         mapPrix.put(Taille.GRANDE, 14.00);
         PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);
@@ -126,8 +126,8 @@ class PizzaServiceImplTest {
 
     @Test
     void testAjoutPizzaPrixTaille0() {
-        EnumMap<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
-        mapPrix.put(Taille.PETIT, 10.00);
+       Map<Taille, Double> mapPrix = new HashMap<>();
+        mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 0.0);
         mapPrix.put(Taille.GRANDE, 14.00);
         PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);
@@ -137,8 +137,8 @@ class PizzaServiceImplTest {
 
     @Test
     void AjouterMappingIngredient() {
-        EnumMap<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
-        mapPrix.put(Taille.PETIT, 10.00);
+        Map<Taille, Double> mapPrix = new HashMap<>();
+        mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.0);
         mapPrix.put(Taille.GRANDE, 14.00);
         PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);

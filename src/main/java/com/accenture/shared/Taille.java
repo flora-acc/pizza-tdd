@@ -1,7 +1,7 @@
 package com.accenture.shared;
 
 public enum Taille {
-    PETIT,
+    PETITE,
     MOYENNE,
     GRANDE
 }
