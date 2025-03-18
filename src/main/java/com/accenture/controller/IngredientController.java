@@ -61,6 +61,7 @@ public class IngredientController {
                 .toUri();
         return ResponseEntity.created(location).body(ingredientResponse);
     }
+
     @Operation(summary = "Afficher un ingrédient")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ingrédient trouvé"),
@@ -72,17 +73,31 @@ public class IngredientController {
         log.info("trouverParId : {}", ingredientResponse);
         return ResponseEntity.ok(ingredientResponse);
     }
-    @Operation(summary = "Afficher les ingrédient")
+
+    @Operation(summary = "Afficher les ingrédients")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ingrédient trouvé"),
+            @ApiResponse(responseCode = "200", description = "Ingrédients trouvés"),
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle"),
     })
     @GetMapping
-    List<IngredientResponse> afficherTousIngredients() {
+    List<IngredientResponse> afficherTousLesIngredients() {
         log.info("Requête reçue pour récupérer la liste des ingrédients.");
         List<IngredientResponse> ingredients = ingredientService.afficherTousIngredients();
         log.debug("Nombre d'ingrédients trouvés' : {}", ingredients.size());
         return ingredients;
+    }
+
+    @Operation(summary = "Modifier partiellement un ingrédient")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ingrédient modifié"),
+            @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle"),
+    })
+    @PatchMapping("/{id}")
+    ResponseEntity<IngredientResponse> modifierIngredientPartiellement(@PathVariable int id, @RequestBody IngredientRequest ingredientRequest){
+        log.info("Requête reçue pour récupérer un ingrédient.");
+        IngredientResponse reponse = ingredientService.modifierPartiellementIngredient(id, ingredientRequest);
+        return ResponseEntity.ok(reponse);
+
     }
 
 }

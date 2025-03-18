@@ -16,11 +16,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class IngredientImplTest {
@@ -124,6 +125,75 @@ class IngredientImplTest {
         Mockito.when(ingredientMapperMock.toIngredientResponse(parmesan)).thenReturn((parmesanReponse));
 
         assertEquals(dtos, ingredientServiceImpl.afficherTousIngredients());
+    }
+
+    @DisplayName(" Test modifierPartiellementIngredient() : " +
+            "si l'id est inexistant dans la base de données, l'exception est levée")
+    @Test
+    void testModifierPartiellementIngredientIdIntrouvable(){
+        IngredientRequest ingredientRequest = new IngredientRequest("Tomate", 3);
+        Mockito.when(ingredientDao.findById(1)).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = Assertions.assertThrows(EntityNotFoundException.class,
+                () -> ingredientServiceImpl.modifierPartiellementIngredient(1, ingredientRequest));
+        Assertions.assertEquals("Cet ingrédient est introuvable", ex.getMessage());
+    }
+
+    @DisplayName("""
+            Test de la méthode modifierPartiellementIngredientNom qui 
+            enregistre la modification en BDD
+            """)
+    @Test
+    void testModifierPartiellementIngredientNom(){
+        //renvoie un objet de type Ingredient
+        Ingredient ingredientExistant = new Ingredient("Tomate", 3);
+        //créer le DTO de mise à jour
+        IngredientRequest ingredientRequest = new IngredientRequest("NouveauNom",ingredientExistant.getQuantite());
+        // on crée un nouvel ingrédient - copie de ingredientExistant pour comparer
+        Ingredient ingredientMisAJour = new Ingredient("Tomate", 3);
+        ingredientMisAJour.setNom("NouveauNom");
+
+        // réponse attendue après modification
+        IngredientResponse ingredientResponse = new IngredientResponse(1,"NouveauNom",ingredientExistant.getQuantite());
+        //On dit à Mockito de renvoyer un Optional contenant ingredientExistant
+        Mockito.when(ingredientDao.findById(1)).thenReturn((Optional.of(ingredientExistant)));
+        // simule la sauvegarde du client dans la base de données
+        Mockito.when(ingredientDao.save(Mockito.any(Ingredient.class))).thenReturn(ingredientMisAJour);
+        // convertit le Client mis à jour en un ClientResponseDto
+        Mockito.when(ingredientMapperMock.toIngredientResponse(ingredientMisAJour)).thenReturn(ingredientResponse);
+
+        // appel de la méthode à tester
+        IngredientResponse response = ingredientServiceImpl.modifierPartiellementIngredient(1, ingredientRequest);
+
+        // Si la méthode fonctionne correctement, elle renvoit un DTO
+        assertNotNull(response);
+        assertEquals("NouveauNom", response.nom());
+        Mockito.verify(ingredientDao, Mockito.times(1)).save(ingredientExistant);
+    }
+
+    @DisplayName("""
+            Test de la méthode modifierPartiellementIngredientQuantite qui 
+            enregistre la modification en BDD
+            """)
+    @Test
+    void testModifierPartiellementIngredientQuantite(){
+        //renvoie un objet de type Ingredient
+        Ingredient ingredientExistant = new Ingredient("Tomate", 3);
+        //créer le DTO de mise à jour
+        IngredientRequest ingredientRequest = new IngredientRequest("Tomate", -4);
+        IngredientRequest ingredientRequest2 = new IngredientRequest("Tomate", -4);
+        // on crée un nouvel ingrédient - copie de ingredientExistant pour comparer
+        Ingredient ingredientMisAJour = new Ingredient("Tomate", -4);
+
+        // réponse attendue après modification
+        IngredientResponse ingredientResponse = new IngredientResponse(1,"Tomate",-4);
+        //On dit à Mockito de renvoyer un Optional contenant ingredientExistant
+        Mockito.when(ingredientDao.findById(1)).thenReturn((Optional.of(ingredientExistant)));
+
+        // Convertit le mise à jour en Request pour la fonction vérification
+        Mockito.when(ingredientMapperMock.toIngredientRequest(ingredientMisAJour)).thenReturn(ingredientRequest2);
+        IngredientException ex = Assertions.assertThrows(IngredientException.class,()-> ingredientServiceImpl.modifierPartiellementIngredient(1,ingredientRequest));
+        Assertions.assertEquals("La quantité doit être supérieure ou égale à 0", ex.getMessage());
     }
 
 

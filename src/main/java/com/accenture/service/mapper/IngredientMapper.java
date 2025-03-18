@@ -10,4 +10,5 @@ public interface IngredientMapper {
 
     Ingredient toIngredient(IngredientRequest ingredientRequest);
     IngredientResponse toIngredientResponse(Ingredient ingredient);
+    IngredientRequest toIngredientRequest(Ingredient ingredient);
 }

@@ -45,6 +45,18 @@ public class IngredientServiceImpl implements IngredientService {
                 .toList();
     }
 
+    @Override
+    public IngredientResponse modifierPartiellementIngredient(int id, IngredientRequest ingredientRequest) throws EntityNotFoundException {
+
+        Ingredient ingredientExistant = ingredientDao.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Cet ingrédient est introuvable"));
+
+        remplacer(ingredientRequest, ingredientExistant);
+        verificationIngredient(ingredientMapper.toIngredientRequest(ingredientExistant));
+        Ingredient ingredientMisAJour = ingredientDao.save(ingredientExistant);
+        return ingredientMapper.toIngredientResponse(ingredientMisAJour);
+    }
+
 //    *************************************************************************
 //    ************************ METHODES PRIVEES *******************************
 //    *************************************************************************
@@ -59,4 +71,13 @@ public class IngredientServiceImpl implements IngredientService {
         if (ingredientRequest.nom() == null || ingredientRequest.nom().isBlank())
             throw new IngredientException("Le nom est obligatoire");
     }
+
+    private static void remplacer(IngredientRequest ingredientRequest, Ingredient ingredientExistant) {
+        if (ingredientRequest.nom() != null)
+            ingredientExistant.setNom(ingredientRequest.nom());
+        if (ingredientRequest.quantite() != null)
+            ingredientExistant.setQuantite(ingredientRequest.quantite());
+    }
+
+
 }

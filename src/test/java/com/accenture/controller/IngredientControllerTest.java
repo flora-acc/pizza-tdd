@@ -88,4 +88,31 @@ class IngredientControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("L'id n'existe pas en base"));
     }
+
+    @Test
+    void testModifierPartiellementCorrect() throws Exception {
+        IngredientRequest ingredientRequest = new IngredientRequest("Tomate", 3);
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/ingredients/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(ingredientRequest))
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.nom").value("Tomate"))
+                .andExpect(jsonPath("$.quantite").value(3));
+    }
+
+
+
+    @Test
+    void testModifierPartiellementIncorrect() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/ingredients/6")
+                                .contentType(MediaType.APPLICATION_JSON)
+
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("L'id n'existe pas en base"));
+    }
 }
