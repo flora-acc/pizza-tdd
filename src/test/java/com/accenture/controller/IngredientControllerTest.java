@@ -67,7 +67,7 @@ class IngredientControllerTest {
     }
 
     @Test
-    void testTrouverParIdCorrect() throws Exception {
+    void atestTrouverParIdCorrect() throws Exception {
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/ingredients/1")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -104,15 +104,16 @@ class IngredientControllerTest {
     }
 
 
-
     @Test
-    void testModifierPartiellementIncorrect() throws Exception {
+    void testModifierPartiellementIdIncorrect() throws Exception {
+        IngredientRequest ingredientRequest = new IngredientRequest("Tomate", 3);
         mockMvc.perform(
                         MockMvcRequestBuilders.patch("/ingredients/6")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(ingredientRequest))
 
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("L'id n'existe pas en base"));
+                .andExpect(jsonPath("$.message").value("Cet ingrédient est introuvable"));
     }
 }
