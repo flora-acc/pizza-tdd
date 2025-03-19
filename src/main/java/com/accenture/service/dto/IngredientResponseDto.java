@@ -1,8 +1,8 @@
 package com.accenture.service.dto;
 
-public record IngredientRequest (
+public record IngredientResponseDto(
+        int id,
         String nom,
         Integer quantite
-
-){
+) {
 }

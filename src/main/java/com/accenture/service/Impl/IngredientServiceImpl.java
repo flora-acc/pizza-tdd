@@ -4,8 +4,8 @@ import com.accenture.exception.IngredientException;
 import com.accenture.repository.IngredientDao;
 import com.accenture.repository.model.Ingredient;
 import com.accenture.service.Interface.IngredientService;
-import com.accenture.service.dto.IngredientRequest;
-import com.accenture.service.dto.IngredientResponse;
+import com.accenture.service.dto.IngredientRequestDto;
+import com.accenture.service.dto.IngredientResponseDto;
 import com.accenture.service.mapper.IngredientMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,7 @@ public class IngredientServiceImpl implements IngredientService {
     private IngredientMapper ingredientMapper;
 
     @Override
-    public IngredientResponse ajouter(IngredientRequest ingredientRequest) {
+    public IngredientResponseDto ajouter(IngredientRequestDto ingredientRequest) {
         verificationIngredient(ingredientRequest);
         return ingredientMapper.toIngredientResponse(
                 ingredientDao.save(
@@ -34,7 +34,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientResponse trouverParId(int id) {
+    public IngredientResponseDto trouverParId(int id) {
         Optional<Ingredient> optIngredient = ingredientDao.findById(id);
         if (optIngredient.isEmpty())
             throw new EntityNotFoundException("L'id n'existe pas en base");
@@ -43,14 +43,14 @@ public class IngredientServiceImpl implements IngredientService {
 
 
     @Override
-    public List<IngredientResponse> afficherTousIngredients() throws IngredientException {
+    public List<IngredientResponseDto> afficherTousIngredients() throws IngredientException {
         return ingredientDao.findAll().stream()
                 .map(ingredient -> ingredientMapper.toIngredientResponse(ingredient))
                 .toList();
     }
 
     @Override
-    public IngredientResponse modifierPartiellementIngredient(int id, IngredientRequest ingredientRequest) throws EntityNotFoundException {
+    public IngredientResponseDto modifierPartiellementIngredient(int id, IngredientRequestDto ingredientRequest) throws EntityNotFoundException {
 
         Ingredient ingredientExistant = ingredientDao.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Cet ingrédient est introuvable"));
@@ -65,7 +65,7 @@ public class IngredientServiceImpl implements IngredientService {
 //    ************************ METHODES PRIVEES *******************************
 //    *************************************************************************
 
-    private static void verificationIngredient(IngredientRequest ingredientRequest) {
+    private static void verificationIngredient(IngredientRequestDto ingredientRequest) {
         String message = "";
         if (ingredientRequest == null) {
             message = "L'ingrédient est null";
@@ -92,7 +92,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     }
 
-    private static void remplacer(IngredientRequest ingredientRequest, Ingredient ingredientExistant) {
+    private static void remplacer(IngredientRequestDto ingredientRequest, Ingredient ingredientExistant) {
         if (ingredientRequest.nom() != null)
             ingredientExistant.setNom(ingredientRequest.nom());
         if (ingredientRequest.quantite() != null)

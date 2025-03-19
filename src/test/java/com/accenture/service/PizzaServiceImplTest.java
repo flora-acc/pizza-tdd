@@ -8,7 +8,7 @@ import com.accenture.repository.PizzaDao;
 import com.accenture.repository.model.Ingredient;
 import com.accenture.repository.model.Pizza;
 import com.accenture.service.Impl.PizzaServiceImpl;
-import com.accenture.service.dto.PizzaRequest;
+import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
 import com.accenture.shared.Taille;
 import org.junit.jupiter.api.Assertions;
@@ -44,7 +44,7 @@ class PizzaServiceImplTest {
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
-        PizzaRequest pizzaRequest = new PizzaRequest(null, List.of(1, 2, 3), mapPrix);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto(null, List.of(1, 2, 3), mapPrix);
         PizzaException ex = Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
         Assertions.assertEquals("Le nom de la pizza est obligatoire", ex.getMessage());
     }
@@ -55,7 +55,7 @@ class PizzaServiceImplTest {
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
-        PizzaRequest pizzaRequest = new PizzaRequest("", List.of(1, 2, 3), mapPrix);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto("", List.of(1, 2, 3), mapPrix);
         PizzaException ex = Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
         Assertions.assertEquals("Le nom de la pizza est obligatoire", ex.getMessage());
     }
@@ -66,7 +66,7 @@ class PizzaServiceImplTest {
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
-        PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", null, mapPrix);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", null, mapPrix);
         PizzaException ex = Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
         Assertions.assertEquals("La liste d'ingrédients est obligatoire", ex.getMessage());
     }
@@ -77,14 +77,14 @@ class PizzaServiceImplTest {
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
-        PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1), mapPrix);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1), mapPrix);
         PizzaException ex = Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
         Assertions.assertEquals("La pizza doit utiliser deux ingrédients ou plus", ex.getMessage());
     }
 
     @Test
     void testAjoutPizzaPrixNull() {
-        PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), null);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1, 2), null);
         PizzaException ex = Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
         Assertions.assertEquals("La liste des prix est obligatoire", ex.getMessage());
     }
@@ -95,7 +95,7 @@ class PizzaServiceImplTest {
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
 
-        PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1, 2), mapPrix);
         PizzaException ex = Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
         Assertions.assertEquals("Tous les prix par taille sont obligatoires", ex.getMessage());
     }
@@ -106,7 +106,7 @@ class PizzaServiceImplTest {
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
         mapPrix.put(Taille.GRANDE, 14.00);
-        PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1, 2), mapPrix);
         Mockito.when(ingredientDaoMock.findById(1)).thenReturn(Optional.empty());
 
         IngredientException ex = Assertions.assertThrows(IngredientException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
@@ -119,7 +119,7 @@ class PizzaServiceImplTest {
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, null);
         mapPrix.put(Taille.GRANDE, 14.00);
-        PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1, 2), mapPrix);
         PizzaException ex = Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
         Assertions.assertEquals("Un prix ne doit pas être null", ex.getMessage());
     }
@@ -130,7 +130,7 @@ class PizzaServiceImplTest {
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 0.0);
         mapPrix.put(Taille.GRANDE, 14.00);
-        PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1, 2), mapPrix);
         PizzaException ex = Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
         Assertions.assertEquals("Un prix ne doit pas être égal à 0", ex.getMessage());
     }
@@ -141,7 +141,7 @@ class PizzaServiceImplTest {
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.0);
         mapPrix.put(Taille.GRANDE, 14.00);
-        PizzaRequest pizzaRequest = new PizzaRequest("Trois fromages", List.of(1, 2), mapPrix);
+        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1, 2), mapPrix);
 
 
         PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), mapPrix);

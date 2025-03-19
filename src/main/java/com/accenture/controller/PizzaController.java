@@ -1,9 +1,9 @@
 package com.accenture.controller;
 
 import com.accenture.service.Interface.PizzaService;
-import com.accenture.service.dto.IngredientRequest;
+import com.accenture.service.dto.IngredientRequestDto;
 
-import com.accenture.service.dto.PizzaRequest;
+import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,7 +43,7 @@ public class PizzaController {
     ResponseEntity<PizzaResponseDto> ajouterPizza(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Pizza Création", required = true,
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = IngredientRequest.class),
+                    schema = @Schema(implementation = IngredientRequestDto.class),
                     examples = @ExampleObject(value = """
                              {"nom": "Margarita",
                              "idIngredient": [
@@ -55,7 +55,7 @@ public class PizzaController {
                                "GRANDE": 14.0
                              }}
                             """
-                    )))@RequestBody PizzaRequest pizzaRequest){
+                    )))@RequestBody PizzaRequestDto pizzaRequest){
         PizzaResponseDto pizzaResponseDto = pizzaService.ajouter(pizzaRequest);
         log.info("ajout : {} ", pizzaResponseDto);
         URI location = ServletUriComponentsBuilder

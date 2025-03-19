@@ -1,8 +1,7 @@
 package com.accenture.controller;
 
 
-import com.accenture.repository.model.Ingredient;
-import com.accenture.service.dto.IngredientRequest;
+import com.accenture.service.dto.IngredientRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -15,8 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,7 +33,7 @@ class IngredientControllerTest {
 
     @Test
     void testAjouterIngredient() throws Exception {
-        IngredientRequest ingredientRequest = new IngredientRequest("Tomate", 3);
+        IngredientRequestDto ingredientRequest = new IngredientRequestDto("Tomate", 3);
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/ingredients")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -49,7 +46,7 @@ class IngredientControllerTest {
 
     @Test
     void testAjouterIngredientIncorrect() throws Exception {
-        IngredientRequest ingredientRequest = new IngredientRequest("Tomate", -4);
+        IngredientRequestDto ingredientRequest = new IngredientRequestDto("Tomate", -4);
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/ingredients")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +88,7 @@ class IngredientControllerTest {
 
     @Test
     void testModifierPartiellementCorrect() throws Exception {
-        IngredientRequest ingredientRequest = new IngredientRequest("Tomate", 3);
+        IngredientRequestDto ingredientRequest = new IngredientRequestDto("Tomate", 3);
         mockMvc.perform(
                         MockMvcRequestBuilders.patch("/ingredients/1")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -106,7 +103,7 @@ class IngredientControllerTest {
 
     @Test
     void testModifierPartiellementIdIncorrect() throws Exception {
-        IngredientRequest ingredientRequest = new IngredientRequest("Tomate", 3);
+        IngredientRequestDto ingredientRequest = new IngredientRequestDto("Tomate", 3);
         mockMvc.perform(
                         MockMvcRequestBuilders.patch("/ingredients/6")
                                 .contentType(MediaType.APPLICATION_JSON)

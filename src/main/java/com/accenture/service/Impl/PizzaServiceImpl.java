@@ -7,7 +7,7 @@ import com.accenture.repository.PizzaDao;
 import com.accenture.repository.model.Ingredient;
 import com.accenture.repository.model.Pizza;
 import com.accenture.service.Interface.PizzaService;
-import com.accenture.service.dto.PizzaRequest;
+import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class PizzaServiceImpl implements PizzaService {
 
 
     @Override
-    public PizzaResponseDto ajouter(PizzaRequest pizzaRequest) {
+    public PizzaResponseDto ajouter(PizzaRequestDto pizzaRequest) {
         verifierPizza(pizzaRequest);
         return toPizzaResponse(pizzaDao.save(toPizza(pizzaRequest)));
 
@@ -41,7 +41,7 @@ public class PizzaServiceImpl implements PizzaService {
 //    *************************************************************************
 
 
-    private static void verifierPizza(PizzaRequest pizzaRequest) {
+    private static void verifierPizza(PizzaRequestDto pizzaRequest) {
         String message;
 
         if (pizzaRequest == null) {
@@ -90,7 +90,7 @@ public class PizzaServiceImpl implements PizzaService {
         return new PizzaResponseDto(pizza1.getId(), pizza1.getNom(), listeIngredient, pizza1.getPrix());
     }
 
-    private Pizza toPizza(PizzaRequest pizzaRequest) {
+    private Pizza toPizza(PizzaRequestDto pizzaRequest) {
 
         List<Ingredient> ingredients = new ArrayList<>();
         Optional<Ingredient> optionalIngredient;

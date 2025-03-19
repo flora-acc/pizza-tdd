@@ -1,8 +1,8 @@
 package com.accenture.controller;
 
 import com.accenture.service.Interface.IngredientService;
-import com.accenture.service.dto.IngredientRequest;
-import com.accenture.service.dto.IngredientResponse;
+import com.accenture.service.dto.IngredientRequestDto;
+import com.accenture.service.dto.IngredientResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -39,10 +39,10 @@ public class IngredientController {
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
     })
     @PostMapping
-    ResponseEntity<IngredientResponse> ajouterIngredient(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    ResponseEntity<IngredientResponseDto> ajouterIngredient(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Ingrédient Création", required = true,
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = IngredientRequest.class),
+                    schema = @Schema(implementation = IngredientRequestDto.class),
                     examples = @ExampleObject(value = """
                             {
                             
@@ -50,8 +50,8 @@ public class IngredientController {
                               "quantite": 3
                             }
                             """
-                    ))) @RequestBody IngredientRequest ingredientRequest) {
-        IngredientResponse ingredientResponse = ingredientService.ajouter(ingredientRequest);
+                    ))) @RequestBody IngredientRequestDto ingredientRequest) {
+        IngredientResponseDto ingredientResponse = ingredientService.ajouter(ingredientRequest);
         log.info("ajout : {} ", ingredientResponse);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -67,8 +67,8 @@ public class IngredientController {
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle"),
     })
     @GetMapping("/{id}")
-    ResponseEntity<IngredientResponse> trouverParId(@PathVariable int id) {
-        IngredientResponse ingredientResponse = ingredientService.trouverParId(id);
+    ResponseEntity<IngredientResponseDto> trouverParId(@PathVariable int id) {
+        IngredientResponseDto ingredientResponse = ingredientService.trouverParId(id);
         log.info("trouverParId : {}", ingredientResponse);
         return ResponseEntity.ok(ingredientResponse);
     }
@@ -79,9 +79,9 @@ public class IngredientController {
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle"),
     })
     @GetMapping
-    List<IngredientResponse> afficherTousLesIngredients() {
+    List<IngredientResponseDto> afficherTousLesIngredients() {
         log.info("Requête reçue pour récupérer la liste des ingrédients.");
-        List<IngredientResponse> ingredients = ingredientService.afficherTousIngredients();
+        List<IngredientResponseDto> ingredients = ingredientService.afficherTousIngredients();
         log.debug("Nombre d'ingrédients trouvés' : {}", ingredients.size());
         return ingredients;
     }
@@ -92,10 +92,10 @@ public class IngredientController {
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle"),
     })
     @PatchMapping("/{id}")
-    ResponseEntity<IngredientResponse> modifierIngredientPartiellement(@PathVariable int id, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    ResponseEntity<IngredientResponseDto> modifierIngredientPartiellement(@PathVariable int id, @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Ingrédient Création", required = true,
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = IngredientRequest.class),
+                    schema = @Schema(implementation = IngredientRequestDto.class),
                     examples = @ExampleObject(value = """
                             {
                             
@@ -103,9 +103,9 @@ public class IngredientController {
                               "quantite": 3
                             }
                             """
-                    )))@RequestBody IngredientRequest ingredientRequest){
+                    )))@RequestBody IngredientRequestDto ingredientRequest){
         log.info("Requête reçue pour récupérer un ingrédient.");
-        IngredientResponse reponse = ingredientService.modifierPartiellementIngredient(id, ingredientRequest);
+        IngredientResponseDto reponse = ingredientService.modifierPartiellementIngredient(id, ingredientRequest);
         return ResponseEntity.ok(reponse);
 
     }
