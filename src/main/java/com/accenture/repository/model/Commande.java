@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Commande {
 
-    int id;
+    private int id;
 
 
 }
