@@ -1,15 +1,22 @@
 package com.accenture.service.Impl;
 
 import com.accenture.exception.ClientException;
+import com.accenture.exception.IngredientException;
 import com.accenture.repository.ClientDao;
+import com.accenture.repository.model.Client;
 import com.accenture.service.Interface.ClientService;
 import com.accenture.service.dto.ClientRequestDto;
 import com.accenture.service.dto.ClientResponseDto;
+import com.accenture.service.dto.IngredientResponseDto;
 import com.accenture.service.mapper.ClientMapper;
 import com.accenture.utils.Regex;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,6 +36,21 @@ public class ClientServiceImpl implements ClientService {
                         clientMapper.toClient(clientRequestDto)
                 )
         );
+    }
+
+    @Override
+    public ClientResponseDto trouverParId(int id) throws EntityNotFoundException {
+        Optional<Client> optClient = clientDao.findById(id);
+        if (optClient.isEmpty())
+            throw new EntityNotFoundException("L'id n'existe pas en base");
+        return clientMapper.toClientResponseDto(optClient.get());
+    }
+
+    @Override
+    public List<ClientResponseDto> afficherTousClients() throws ClientException {
+        return clientDao.findAll().stream()
+                .map(client -> clientMapper.toClientResponseDto(client))
+                .toList();
     }
 
     //    *************************************************************************
@@ -66,4 +88,5 @@ public class ClientServiceImpl implements ClientService {
         if (!clientRequestDto.email().matches(Regex.EMAIL_REGEX))
             throw new ClientException("Format de l'email invalide");
     }
+
 }
