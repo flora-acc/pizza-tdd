@@ -61,7 +61,7 @@ public class PizzaServiceImpl implements PizzaService {
 
     @Override
     public PizzaResponseDto trouverParId(int id) {
-        Optional<Pizza> optionalPizza = pizzaDao.findById(1);
+        Optional<Pizza> optionalPizza = pizzaDao.findById(id);
         if (optionalPizza.isEmpty()){
             EntityNotFoundException ex = new EntityNotFoundException("Aucune Pizza à cet ID");
             log.error("Erreur trouverParId : {} ", ex.getMessage());
