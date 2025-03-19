@@ -12,6 +12,7 @@ import com.accenture.service.dto.ClientResponseDto;
 import com.accenture.service.dto.IngredientRequestDto;
 import com.accenture.service.dto.IngredientResponseDto;
 import com.accenture.service.mapper.ClientMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class ClientImplTest {
@@ -36,60 +38,11 @@ class ClientImplTest {
     @Mock
     ClientDao clientDao;
 
-//    @Test
-//    void testAjoutClientNull() {
-//        ClientException ex = Assertions.assertThrows(ClientException.class, () -> clientServiceImpl.ajouterClient(null));
-//        Assertions.assertEquals("Le client est introuvable", ex.getMessage());
-//    }
-//
-//    @Test
-//    void testAjoutClientNomNull() {
-//        ClientRequestDto client1 = new ClientRequestDto("test", null,"test@email.fr");
-//        ClientException ex = Assertions.assertThrows(ClientException.class, () -> clientServiceImpl.ajouterClient(client1));
-//        Assertions.assertEquals("Le nom est obligatoire", ex.getMessage());
-//    }
-//
-//    @Test
-//    void testAjoutClientNomBlank() {
-//        ClientRequestDto client1 = new ClientRequestDto("test", "\t","test@email.fr");
-//        ClientException ex = Assertions.assertThrows(ClientException.class, () -> clientServiceImpl.ajouterClient(client1));
-//        Assertions.assertEquals("Le nom est obligatoire", ex.getMessage());
-//    }
-//
-//    @Test
-//    void testAjoutClientPreNomNull() {
-//        ClientRequestDto client1 = new ClientRequestDto(null, "test","test@email.fr");
-//        ClientException ex = Assertions.assertThrows(ClientException.class, () -> clientServiceImpl.ajouterClient(client1));
-//        Assertions.assertEquals("Le prenom est obligatoire", ex.getMessage());
-//    }
-//
-//    @Test
-//    void testAjoutClientPreNomBlank() {
-//        ClientRequestDto client1 = new ClientRequestDto("\t", "test","test@email.fr");
-//        ClientException ex = Assertions.assertThrows(ClientException.class, () -> clientServiceImpl.ajouterClient(client1));
-//        Assertions.assertEquals("Le prenom est obligatoire", ex.getMessage());
-//    }
-//
-//    @Test
-//    void testAjoutClientEmailNull() {
-//        ClientRequestDto client1 = new ClientRequestDto("test", "test",null);
-//        ClientException ex = Assertions.assertThrows(ClientException.class, () -> clientServiceImpl.ajouterClient(client1));
-//        Assertions.assertEquals("L'email est obligatoire", ex.getMessage());
-//    }
-//
-//    @Test
-//    void testAjoutClientEmailBlank() {
-//        ClientRequestDto client1 = new ClientRequestDto("test", "test","\t");
-//        ClientException ex = Assertions.assertThrows(ClientException.class, () -> clientServiceImpl.ajouterClient(client1));
-//        Assertions.assertEquals("L'email est obligatoire", ex.getMessage());
-//    }
-//
-//    @Test
-//    void testAjoutClientEmailInvalide() {
-//        ClientRequestDto client1 = new ClientRequestDto("test", "test","formatInvalide");
-//        ClientException ex = Assertions.assertThrows(ClientException.class, () -> clientServiceImpl.ajouterClient(client1));
-//        Assertions.assertEquals("Format de l'email invalide", ex.getMessage());
-//    }
+    @Test
+    void testAjoutClientNull() {
+        ClientException ex = Assertions.assertThrows(ClientException.class, () -> clientServiceImpl.ajouterClient(null));
+        Assertions.assertEquals("Le client est introuvable", ex.getMessage());
+    }
 
 
     @ParameterizedTest
@@ -130,5 +83,24 @@ class ClientImplTest {
         Assertions.assertEquals(clientResponseDto, clientServiceImpl.ajouterClient(clientRequestDto));
 
         Mockito.verify(clientDao).save(clientAvant);
+    }
+
+    @Test
+    void testTrouverParIdAvecIdIntrouvable() {
+        Mockito.when(clientDao.findById(1)).thenReturn(Optional.empty());
+        EntityNotFoundException ex = Assertions.assertThrows(EntityNotFoundException.class, () -> clientServiceImpl.trouverParId(1));
+        Assertions.assertEquals("L'id n'existe pas en base", ex.getMessage());
+    }
+
+    @Test
+    void testTrouverParIdOk() {
+        Commande commande1 = new Commande(1);
+        Client client1 = new Client("Test1","Test1","test@email.fr",List.of(commande1));
+        ClientResponseDto clientResponseDto = new ClientResponseDto(1, "Test", "Test","test@email.fr", List.of(commande1));
+
+        Mockito.when(clientDao.findById(1)).thenReturn(Optional.of(client1));
+        Mockito.when(clientMapper.toClientResponseDto(client1)).thenReturn(clientResponseDto);
+
+        Assertions.assertEquals(clientResponseDto, clientServiceImpl.trouverParId(1));
     }
 }

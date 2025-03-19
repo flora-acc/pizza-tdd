@@ -13,3 +13,15 @@ INSERT INTO PIZZAS_PRIX (pizza_id, taille, prix) VALUES
 (1, 'PETITE', 10.00),
 (1, 'MOYENNE', 12.00),
 (1, 'GRANDE', 14.00);
+
+INSERT INTO CLIENT (nom, prenom, email) VALUES
+('Michel', 'Durand', 'michel@email.fr'),
+('Bob', 'McCain', 'bob@email.fr');
+
+INSERT INTO COMMANDE (id) VALUES
+(1),
+(2);
+
+INSERT INTO CLIENT_HISTORIQUE_COMM (client_id, historique_comm_id) VALUES
+(1,1),
+(2,2);

@@ -2,14 +2,18 @@ package com.accenture.service.Impl;
 
 import com.accenture.exception.ClientException;
 import com.accenture.repository.ClientDao;
+import com.accenture.repository.model.Client;
 import com.accenture.service.Interface.ClientService;
 import com.accenture.service.dto.ClientRequestDto;
 import com.accenture.service.dto.ClientResponseDto;
 import com.accenture.service.mapper.ClientMapper;
 import com.accenture.utils.Regex;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,6 +33,14 @@ public class ClientServiceImpl implements ClientService {
                         clientMapper.toClient(clientRequestDto)
                 )
         );
+    }
+
+    @Override
+    public ClientResponseDto trouverParId(int id) throws EntityNotFoundException {
+        Optional<Client> optClient = clientDao.findById(id);
+        if (optClient.isEmpty())
+            throw new EntityNotFoundException("L'id n'existe pas en base");
+        return clientMapper.toClientResponseDto(optClient.get());
     }
 
     //    *************************************************************************

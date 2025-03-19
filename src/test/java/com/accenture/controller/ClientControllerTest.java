@@ -50,4 +50,28 @@ class ClientControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Le prenom est obligatoire"));
     }
+
+    @Test
+    void atestTrouverParIdCorrect() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/clients/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.nom").value("Michel"))
+                .andExpect(jsonPath("$.prenom").value("Durand"))
+                .andExpect(jsonPath("$.email").value("michel@email.fr"));
+    }
+
+    @Test
+    void testTrouverParIdIncorrect() throws Exception{
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/clients/6")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("L'id n'existe pas en base"));
+    }
 }
