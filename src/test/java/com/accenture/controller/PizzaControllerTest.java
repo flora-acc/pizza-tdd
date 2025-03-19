@@ -1,6 +1,7 @@
 package com.accenture.controller;
 
 import com.accenture.service.dto.PizzaRequestDto;
+import com.accenture.shared.Filtre;
 import com.accenture.shared.Taille;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
@@ -42,7 +43,7 @@ class PizzaControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(pizzaRequest))
                 ).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(2));
+                .andExpect(jsonPath("$.id").value(3));
     }
 
     @Test
@@ -57,11 +58,29 @@ class PizzaControllerTest {
                 .andExpect(jsonPath("$.message").value("La liste des prix est obligatoire"));
     }
 
-////    @Test
-////    void trouverToutes () throws Exception
-////    {
-////        mockMvc.perform()
-//    }
+    @Test
+    void btrouverToutes () throws Exception
+   {
+       mockMvc.perform(MockMvcRequestBuilders.get("/pizzas")).
+               andExpect(status().isOk())
+               .andExpect(jsonPath("$.length()").value(3));
+    }
+
+    @Test
+    void btrouverToutesCommandables() throws Exception{
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/pizzas?filtre=COMMANDABLE")).
+                andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    void btrouverToutesRetiree() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/pizzas?filtre=RETIREE")).
+                andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1));
+    }
+
     @Test
     void supprimerPizza() throws Exception {
 
@@ -76,7 +95,7 @@ class PizzaControllerTest {
     void supprimerPizzaException() throws Exception
 {
     mockMvc.perform(
-                    MockMvcRequestBuilders.delete("/pizzas?id="+3)
+                    MockMvcRequestBuilders.delete("/pizzas?id="+6)
 
             ).andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value("Aucune Pizza à cette id"));

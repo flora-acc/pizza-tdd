@@ -3,6 +3,7 @@ package com.accenture.controller;
 import com.accenture.service.Interface.IngredientService;
 import com.accenture.service.dto.IngredientRequestDto;
 import com.accenture.service.dto.IngredientResponseDto;
+import com.accenture.shared.Filtre;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -109,5 +110,7 @@ public class IngredientController {
         return ResponseEntity.ok(reponse);
 
     }
+
+
 
 }
