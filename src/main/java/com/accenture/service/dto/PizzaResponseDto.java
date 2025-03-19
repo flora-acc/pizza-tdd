@@ -11,6 +11,7 @@ public record PizzaResponseDto (
         int id,
         String nom,
         List<String> ingredients,
-        Map<Taille, Double> prix
+        Map<Taille, Double> prix,
+        Boolean commandable
 ) {
 }

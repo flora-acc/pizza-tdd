@@ -30,4 +30,6 @@ public class Pizza {
     @MapKeyColumn(name = "taille")// Stocke la clé de l'EnumMap sous forme de chaîne
     @Column(name = "prix") // Valeur stockée
     private Map<Taille,Double> prix;
+
+    private Boolean commandable;
 }

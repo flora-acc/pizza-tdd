@@ -9,6 +9,7 @@ import com.accenture.repository.model.Pizza;
 import com.accenture.service.Interface.PizzaService;
 import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,16 @@ public class PizzaServiceImpl implements PizzaService {
 
     }
 
-
+    @Override
+    public void supprimerDeLaCarteParId(int id) {
+       Optional<Pizza> pizza = pizzaDao.findById(id);
+       if (pizza.isEmpty()){
+          EntityNotFoundException entityNotFoundException = new EntityNotFoundException("Aucune Pizza à cette id");
+          log.error("Erreur : {} ", entityNotFoundException.getMessage());
+           throw entityNotFoundException;
+       }
+      pizza.get().setCommandable(false);
+    }
 
 
     //*************************************************************************
@@ -82,17 +92,24 @@ public class PizzaServiceImpl implements PizzaService {
             message = "Un prix ne doit pas être égal à 0";
             log.error(ERREUR_VERIFICATION_PIZZA, message);
             throw new PizzaException(message);}
-        }
+
+        if (pizzaRequest.commandable() == null){
+        message = "Précisez si la pizza est commandable";
+        log.error(ERREUR_VERIFICATION_PIZZA, message);
+        throw new PizzaException(message);}
+    }
+
 
     private static PizzaResponseDto toPizzaResponse(Pizza pizza1) {
         List<String> listeIngredient = new ArrayList<>();
         pizza1.getIngredients().forEach(ingredient -> listeIngredient.add(ingredient.getNom()));
-        return new PizzaResponseDto(pizza1.getId(), pizza1.getNom(), listeIngredient, pizza1.getPrix());
+        return new PizzaResponseDto(pizza1.getId(), pizza1.getNom(), listeIngredient, pizza1.getPrix(), pizza1.getCommandable());
     }
 
     private Pizza toPizza(PizzaRequestDto pizzaRequest) {
 
         List<Ingredient> ingredients = new ArrayList<>();
+
         Optional<Ingredient> optionalIngredient;
 
         for (int i = 1; i <= pizzaRequest.idIngredient().size(); i++) {
@@ -109,6 +126,7 @@ public class PizzaServiceImpl implements PizzaService {
         pizza.setNom(pizzaRequest.nom());
         pizza.setIngredients(ingredients);
         pizza.setPrix(pizzaRequest.prix());
+        pizza.setCommandable(pizzaRequest.commandable());
         return pizza;
     }
 }

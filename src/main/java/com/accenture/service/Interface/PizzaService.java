@@ -6,4 +6,6 @@ import com.accenture.service.dto.PizzaResponseDto;
 public interface PizzaService {
 
     PizzaResponseDto ajouter(PizzaRequestDto pizzaRequest);
+
+    void supprimerDeLaCarteParId(int id);
 }
