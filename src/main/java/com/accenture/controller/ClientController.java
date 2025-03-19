@@ -14,10 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -60,5 +57,17 @@ public class ClientController {
                 .buildAndExpand(clientResponse.id())
                 .toUri();
         return ResponseEntity.created(location).body(clientResponse);
+    }
+
+    @Operation(summary = "Afficher un client grâce à son id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Client trouvé"),
+            @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle"),
+    })
+    @GetMapping("/{id}")
+    ResponseEntity<ClientResponseDto> trouverParId(@PathVariable int id) {
+        ClientResponseDto clientResponse = clientService.trouverParId(id);
+        log.info("trouverParId : {}", clientResponse);
+        return ResponseEntity.ok(clientResponse);
     }
 }

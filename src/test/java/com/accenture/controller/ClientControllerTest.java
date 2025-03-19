@@ -1,7 +1,6 @@
 package com.accenture.controller;
 
 import com.accenture.service.dto.ClientRequestDto;
-import com.accenture.service.dto.IngredientRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,7 +28,7 @@ class ClientControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    void testAjouterIngredient() throws Exception {
+    void testAjouterClient() throws Exception {
         ClientRequestDto clientRequest = new ClientRequestDto("Test", "Test","test@email.fr");
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/clients")
@@ -49,5 +49,37 @@ class ClientControllerTest {
                                 .content(objectMapper.writeValueAsString(clientRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Le prenom est obligatoire"));
+    }
+
+    @Test
+    void atestTrouverParIdCorrect() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/clients/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.nom").value("Michel"))
+                .andExpect(jsonPath("$.prenom").value("Durand"))
+                .andExpect(jsonPath("$.email").value("michel@email.fr"));
+    }
+
+    @Test
+    void testTrouverParIdIncorrect() throws Exception{
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/clients/6")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("L'id n'existe pas en base"));
+    }
+
+    @Test
+    void atestAfficherTousClients() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/clients"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2));
     }
 }
