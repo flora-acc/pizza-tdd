@@ -5,6 +5,7 @@ import com.accenture.service.dto.IngredientRequestDto;
 
 import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
+import com.accenture.shared.Filtre;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -70,5 +72,12 @@ public class PizzaController {
        PizzaResponseDto pizzaResponseDto = pizzaService.supprimerDeLaCarteParId(id);
         log.info("Supression de la carte : {}", id);
         return ResponseEntity.status(HttpStatus.OK).body(pizzaResponseDto);
+    }
+
+    @GetMapping()
+    ResponseEntity<List> trouverToutesParFiltre (@RequestParam (required = false) Filtre filtre){
+        List<PizzaResponseDto> liste = pizzaService.trouverToutes(filtre);
+        log.info("Trouver Pizzas : {}", liste);
+       return ResponseEntity.status(HttpStatus.OK).body(liste);
     }
 }
