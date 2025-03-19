@@ -43,7 +43,7 @@ public class ClientController {
                     schema = @Schema(implementation = ClientRequestDto.class),
                     examples = @ExampleObject(value = """
                             {
-                            "prenom": "Michel"
+                            "prenom": "Michel",
                             "nom": "Dupont",
                              "email": "email@email.fr"
                             }
