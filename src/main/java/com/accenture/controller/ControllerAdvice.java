@@ -1,5 +1,6 @@
 package com.accenture.controller;
 
+import com.accenture.exception.ClientException;
 import com.accenture.exception.IngredientException;
 import com.accenture.exception.PizzaException;
 import com.accenture.shared.ErreurReponse;
@@ -32,6 +33,13 @@ public class ControllerAdvice {
 
     @ExceptionHandler(PizzaException.class)
     public ResponseEntity<ErreurReponse> gestionPizzaException(PizzaException ex) {
+        ErreurReponse er = new ErreurReponse(LocalDate.now(), "Erreur Fonctionnelle : ", ex.getMessage());
+        log.error("Erreur : {}", er.message());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(er);
+    }
+
+    @ExceptionHandler(ClientException.class)
+    public ResponseEntity<ErreurReponse> gestionClientException(ClientException ex) {
         ErreurReponse er = new ErreurReponse(LocalDate.now(), "Erreur Fonctionnelle : ", ex.getMessage());
         log.error("Erreur : {}", er.message());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(er);

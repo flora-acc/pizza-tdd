@@ -23,5 +23,13 @@ public class Client {
     private String prenom;
     private String email;
 
+    @ManyToMany
     List<Commande> historiqueComm;
+
+    public Client(String nom, String prenom, String email, List<Commande> historiqueComm) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.historiqueComm = historiqueComm;
+    }
 }
