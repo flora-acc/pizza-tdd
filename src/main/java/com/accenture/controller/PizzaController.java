@@ -13,11 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -53,7 +51,9 @@ public class PizzaController {
                                "PETITE": 10.0,
                                "MOYENNE": 12.0,
                                "GRANDE": 14.0
-                             }}
+                             },
+                             "commandable" : true
+                             }
                             """
                     )))@RequestBody PizzaRequestDto pizzaRequest){
         PizzaResponseDto pizzaResponseDto = pizzaService.ajouter(pizzaRequest);
@@ -64,5 +64,11 @@ public class PizzaController {
                 .buildAndExpand(pizzaResponseDto.id())
                 .toUri();
         return ResponseEntity.created(location).body(pizzaResponseDto);
+    }
+    @DeleteMapping
+    ResponseEntity<PizzaResponseDto> supprimerPizzaDeLaCarte(@RequestParam int id){
+       PizzaResponseDto pizzaResponseDto = pizzaService.supprimerDeLaCarteParId(id);
+        log.info("Supression de la carte : {}", id);
+        return ResponseEntity.status(HttpStatus.OK).body(pizzaResponseDto);
     }
 }

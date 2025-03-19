@@ -7,5 +7,5 @@ public interface PizzaService {
 
     PizzaResponseDto ajouter(PizzaRequestDto pizzaRequest);
 
-    void supprimerDeLaCarteParId(int id);
+    PizzaResponseDto supprimerDeLaCarteParId(int id);
 }

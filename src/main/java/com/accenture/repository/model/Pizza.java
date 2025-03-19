@@ -17,7 +17,7 @@ import java.util.Map;
 @Table( name = "pizzas")
 public class Pizza {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
     private String nom;
 
@@ -25,7 +25,7 @@ public class Pizza {
     private List<Ingredient> ingredients;
 
     @ElementCollection
-    @CollectionTable(name = "pizza_prix", joinColumns = @JoinColumn(name = "pizza_id"))
+    @CollectionTable(name = "pizzas_prix", joinColumns = @JoinColumn(name = "pizza_id"))
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "taille")// Stocke la clé de l'EnumMap sous forme de chaîne
     @Column(name = "prix") // Valeur stockée

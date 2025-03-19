@@ -13,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,14 +36,16 @@ public class PizzaServiceImpl implements PizzaService {
     }
 
     @Override
-    public void supprimerDeLaCarteParId(int id) {
-       Optional<Pizza> pizza = pizzaDao.findById(id);
-       if (pizza.isEmpty()){
-          EntityNotFoundException entityNotFoundException = new EntityNotFoundException("Aucune Pizza à cette id");
-          log.error("Erreur : {} ", entityNotFoundException.getMessage());
-           throw entityNotFoundException;
-       }
-      pizza.get().setCommandable(false);
+    public PizzaResponseDto supprimerDeLaCarteParId(int id) {
+        Optional<Pizza> optPizza = pizzaDao.findById(id);
+        if (optPizza.isEmpty()) {
+            EntityNotFoundException entityNotFoundException = new EntityNotFoundException("Aucune Pizza à cette id");
+            log.error("Erreur : {} ", entityNotFoundException.getMessage());
+            throw entityNotFoundException;
+        }
+        Pizza pizza = optPizza.get();
+        pizza.setCommandable(false);
+        return toPizzaResponse(pizzaDao.save(pizza));
     }
 
 
@@ -84,19 +87,22 @@ public class PizzaServiceImpl implements PizzaService {
             log.error(ERREUR_VERIFICATION_PIZZA, message);
             throw new PizzaException(message);
         }
-        if (pizzaRequest.prix().containsValue(null)){
+        if (pizzaRequest.prix().containsValue(null)) {
             message = "Un prix ne doit pas être null";
             log.error(ERREUR_VERIFICATION_PIZZA, message);
-            throw new PizzaException(message);}
-        if (pizzaRequest.prix().containsValue((double) 0)){
+            throw new PizzaException(message);
+        }
+        if (pizzaRequest.prix().containsValue((double) 0)) {
             message = "Un prix ne doit pas être égal à 0";
             log.error(ERREUR_VERIFICATION_PIZZA, message);
-            throw new PizzaException(message);}
+            throw new PizzaException(message);
+        }
 
-        if (pizzaRequest.commandable() == null){
-        message = "Précisez si la pizza est commandable";
-        log.error(ERREUR_VERIFICATION_PIZZA, message);
-        throw new PizzaException(message);}
+        if (pizzaRequest.commandable() == null) {
+            message = "Précisez si la pizza est commandable";
+            log.error(ERREUR_VERIFICATION_PIZZA, message);
+            throw new PizzaException(message);
+        }
     }
 
 

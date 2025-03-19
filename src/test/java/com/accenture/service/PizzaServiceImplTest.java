@@ -125,7 +125,7 @@ class PizzaServiceImplTest {
     }
 
     @Test
-    void testAjoutPizzaCommandableNull(){
+    void testAjoutPizzaCommandableNull() {
         PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1, 2), creationMapPrix(), null);
 
         PizzaException ex = Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
@@ -169,12 +169,13 @@ class PizzaServiceImplTest {
     @Test
     void testSupprimerDeLaCarteCommandable() {
         Pizza pizza = troisFromages();
-        troisFromages().setCommandable(true);
+        pizza.setCommandable(true);
+        Pizza pizza1 = troisFromages();
+        pizza1.setCommandable(false);
         Mockito.when(pizzaDaoMock.findById(1)).thenReturn(Optional.of(pizza));
-        pizzaServiceImpl.supprimerDeLaCarteParId(1);
-        Assertions.assertEquals(false, pizza.getCommandable());
+        Mockito.when(pizzaDaoMock.save(pizza)).thenReturn(pizza1);
+        Assertions.assertEquals(false, pizzaServiceImpl.supprimerDeLaCarteParId(1).commandable());
     }
-
 
 
     //*************************************************************************
