@@ -82,6 +82,13 @@ class PizzaControllerTest {
     }
 
     @Test
+    void trouverParId() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/pizzas/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.nom").value("Hawaienne"));
+    }
+    @Test
     void supprimerPizza() throws Exception {
 
         mockMvc.perform(

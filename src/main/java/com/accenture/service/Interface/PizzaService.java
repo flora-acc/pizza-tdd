@@ -13,4 +13,6 @@ public interface PizzaService {
     PizzaResponseDto supprimerDeLaCarteParId(int id);
 
     List<PizzaResponseDto> trouverToutes(Filtre filtre);
+
+    PizzaResponseDto trouverParId(int i);
 }

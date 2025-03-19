@@ -80,4 +80,11 @@ public class PizzaController {
         log.info("Trouver Pizzas : {}", liste);
        return ResponseEntity.status(HttpStatus.OK).body(liste);
     }
+
+    @GetMapping("/{id}")
+    ResponseEntity<PizzaResponseDto> trouverParId (@PathVariable int id){
+        PizzaResponseDto pizzaResponseDto = pizzaService.trouverParId(id);
+       log.info("trouver par Id : {}", pizzaResponseDto);
+       return ResponseEntity.ok(pizzaResponseDto);
+    }
 }

@@ -240,6 +240,25 @@ class PizzaServiceImplTest {
 
     }
 
+    @Test
+    void testTrouverParIdIncorrect(){
+        Mockito.when(pizzaDaoMock.findById(1)).thenReturn(Optional.empty());
+
+        EntityNotFoundException ex = Assertions.assertThrows(EntityNotFoundException.class, () -> pizzaServiceImpl.trouverParId(1));
+        Assertions.assertEquals("Aucune Pizza à cet ID", ex.getMessage());
+    }
+    @Test
+    void testTrouverParId(){
+        Pizza pizza = troisFromages();
+        pizza.setId(1);
+        PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
+        Mockito.when(pizzaDaoMock.findById(1)).thenReturn(Optional.of(pizza));
+
+        Assertions.assertEquals(pizzaResponseDto, pizzaServiceImpl.trouverParId(1));
+
+    }
+
+
 
 
 

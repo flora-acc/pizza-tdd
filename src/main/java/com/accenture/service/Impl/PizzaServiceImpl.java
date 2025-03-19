@@ -41,7 +41,7 @@ public class PizzaServiceImpl implements PizzaService {
         Optional<Pizza> optPizza = pizzaDao.findById(id);
         if (optPizza.isEmpty()) {
             EntityNotFoundException entityNotFoundException = new EntityNotFoundException("Aucune Pizza à cette id");
-            log.error("Erreur : {} ", entityNotFoundException.getMessage());
+            log.error("Erreur Suppression pizza: {} ", entityNotFoundException.getMessage());
             throw entityNotFoundException;
         }
         Pizza pizza = optPizza.get();
@@ -51,11 +51,23 @@ public class PizzaServiceImpl implements PizzaService {
 
     @Override
     public List<PizzaResponseDto> trouverToutes(Filtre filtre) {
-     return  switch (filtre){
-            case COMMANDABLE -> pizzaDao.findByCommandableTrue().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
+        return switch (filtre) {
+            case COMMANDABLE ->
+                    pizzaDao.findByCommandableTrue().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
             case RETIREE -> pizzaDao.findByCommandableFalse().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
             case null -> pizzaDao.findAll().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
         };
+    }
+
+    @Override
+    public PizzaResponseDto trouverParId(int id) {
+        Optional<Pizza> optionalPizza = pizzaDao.findById(1);
+        if (optionalPizza.isEmpty()){
+            EntityNotFoundException ex = new EntityNotFoundException("Aucune Pizza à cet ID");
+            log.error("Erreur trouverParId : {} ", ex.getMessage());
+            throw ex;
+        }
+        return toPizzaResponse(optionalPizza.get());
     }
 
 
