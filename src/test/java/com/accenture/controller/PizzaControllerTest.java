@@ -57,6 +57,11 @@ class PizzaControllerTest {
                 .andExpect(jsonPath("$.message").value("La liste des prix est obligatoire"));
     }
 
+////    @Test
+////    void trouverToutes () throws Exception
+////    {
+////        mockMvc.perform()
+//    }
     @Test
     void supprimerPizza() throws Exception {
 

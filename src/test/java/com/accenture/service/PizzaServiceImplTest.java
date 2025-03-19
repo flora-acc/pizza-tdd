@@ -10,6 +10,7 @@ import com.accenture.repository.model.Pizza;
 import com.accenture.service.Impl.PizzaServiceImpl;
 import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
+import com.accenture.shared.Filtre;
 import com.accenture.shared.Taille;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +21,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -177,6 +180,66 @@ class PizzaServiceImplTest {
         Assertions.assertEquals(false, pizzaServiceImpl.supprimerDeLaCarteParId(1).commandable());
     }
 
+    @Test
+    void testTrouverToutesCOMMANDABLE() {
+        Pizza pizza1 = troisFromages();
+        pizza1.setId(1);
+        Pizza pizza2 = hawainne();
+        pizza2.setId(2);
+        List<Pizza> ListPizza = List.of(pizza1, pizza2);
+
+        PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
+        PizzaResponseDto pizzaResponseDto2 = new PizzaResponseDto(2, "Hawainne", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
+
+        List<PizzaResponseDto> listResponse = List.of(pizzaResponseDto, pizzaResponseDto2);
+
+        Mockito.when(pizzaDaoMock.findByCommandableTrue()).thenReturn(ListPizza);
+
+        Assertions.assertEquals(listResponse, pizzaServiceImpl.trouverToutes(Filtre.COMMANDABLE));
+
+    }
+
+    @Test
+    void testTrouverToutesRETIREE() {
+        Pizza pizza1 = troisFromages();
+        pizza1.setId(1);
+        pizza1.setCommandable(false);
+        Pizza pizza2 = hawainne();
+        pizza2.setId(2);
+        pizza2.setCommandable(false);
+        List<Pizza> ListPizza = List.of(pizza1, pizza2);
+
+        PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), false);
+        PizzaResponseDto pizzaResponseDto2 = new PizzaResponseDto(2, "Hawainne", List.of("Mozzarrela", "Ananas"), creationMapPrix(), false);
+
+        List<PizzaResponseDto> listResponse = List.of(pizzaResponseDto, pizzaResponseDto2);
+
+        Mockito.when(pizzaDaoMock.findByCommandableFalse()).thenReturn(ListPizza);
+
+        Assertions.assertEquals(listResponse, pizzaServiceImpl.trouverToutes(Filtre.RETIREE));
+
+    }
+    @Test
+    void testTrouverToutes() {
+        Pizza pizza1 = troisFromages();
+        pizza1.setId(1);
+        pizza1.setCommandable(false);
+        Pizza pizza2 = hawainne();
+        pizza2.setId(2);
+        pizza2.setCommandable(false);
+        List<Pizza> ListPizza = List.of(pizza1, pizza2);
+
+        PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), false);
+        PizzaResponseDto pizzaResponseDto2 = new PizzaResponseDto(2, "Hawainne", List.of("Mozzarrela", "Ananas"), creationMapPrix(), false);
+
+        List<PizzaResponseDto> listResponse = List.of(pizzaResponseDto, pizzaResponseDto2);
+
+        Mockito.when(pizzaDaoMock.findAll()).thenReturn(ListPizza);
+
+        Assertions.assertEquals(listResponse, pizzaServiceImpl.trouverToutes(null));
+
+    }
+
 
     //*************************************************************************
 //    ************************ METHODES PRIVEES *******************************
@@ -203,6 +266,15 @@ class PizzaServiceImplTest {
         pizza.setPrix(creationMapPrix());
         pizza.setIngredients(ingredients());
         pizza.setNom("Trois fromages");
+        pizza.setCommandable(true);
+        return pizza;
+    }
+
+    private static Pizza hawainne() {
+        Pizza pizza = new Pizza();
+        pizza.setPrix(creationMapPrix());
+        pizza.setIngredients(ingredients());
+        pizza.setNom("Hawainne");
         pizza.setCommandable(true);
         return pizza;
     }

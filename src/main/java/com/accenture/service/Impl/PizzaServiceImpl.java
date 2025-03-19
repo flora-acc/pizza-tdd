@@ -9,6 +9,7 @@ import com.accenture.repository.model.Pizza;
 import com.accenture.service.Interface.PizzaService;
 import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
+import com.accenture.shared.Filtre;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,15 @@ public class PizzaServiceImpl implements PizzaService {
         Pizza pizza = optPizza.get();
         pizza.setCommandable(false);
         return toPizzaResponse(pizzaDao.save(pizza));
+    }
+
+    @Override
+    public List<PizzaResponseDto> trouverToutes(Filtre filtre) {
+     return  switch (filtre){
+            case COMMANDABLE -> pizzaDao.findByCommandableTrue().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
+            case RETIREE -> pizzaDao.findByCommandableFalse().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
+            case null -> pizzaDao.findAll().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
+        };
     }
 
 
