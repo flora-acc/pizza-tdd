@@ -200,5 +200,39 @@ class IngredientImplTest {
         Assertions.assertEquals("La quantité doit être supérieure ou égale à 0", ex.getMessage());
     }
 
+   @DisplayName("""
+            Test de la méthode modifierPartiellement en passant Null à la request
+            """)
+    @Test
+    void testModifierPartiellementIngredientRequestNull() {
+        //renvoie un objet de type Ingredient
+        Ingredient ingredientExistant = new Ingredient("Tomate", 3);
+        //créer le DTO de mise à jour
+        IngredientRequestDto ingredientRequest = new IngredientRequestDto(null, null);
+        IngredientRequestDto ingredientRequest2 = new IngredientRequestDto("Tomate", 3);
+        // on crée un nouvel ingrédient - copie de ingredientExistant pour comparer
+        Ingredient ingredientMisAJour = new Ingredient("Tomate", 3);
+
+        // réponse attendue après modification
+        IngredientResponseDto ingredientResponse = new IngredientResponseDto(1, "Tomate", -4);
+        //On dit à Mockito de renvoyer un Optional contenant ingredientExistant
+       Mockito.when(ingredientDao.findById(1)).thenReturn((Optional.of(ingredientExistant)));
+       // simule la sauvegarde du client dans la base de données
+       Mockito.when(ingredientDao.save(Mockito.any(Ingredient.class))).thenReturn(ingredientMisAJour);
+       // convertit le Client mis à jour en un ClientResponseDto
+       Mockito.when(ingredientMapperMock.toIngredientRequest(ingredientMisAJour)).thenReturn(ingredientRequest2);
+
+       Mockito.when(ingredientMapperMock.toIngredientResponse(ingredientMisAJour)).thenReturn(ingredientResponse);
+
+
+       // appel de la méthode à tester
+       IngredientResponseDto response = ingredientServiceImpl.modifierPartiellementIngredient(1, ingredientRequest);
+
+       // Si la méthode fonctionne correctement, elle renvoit un DTO
+       assertNotNull(response);
+       assertEquals("Tomate", response.nom());
+       Mockito.verify(ingredientDao, Mockito.times(1)).save(ingredientExistant);
+    }
+
 
 }

@@ -9,9 +9,12 @@ import com.accenture.repository.model.Pizza;
 import com.accenture.service.Interface.PizzaService;
 import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
+import com.accenture.shared.Filtre;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +36,27 @@ public class PizzaServiceImpl implements PizzaService {
 
     }
 
+    @Override
+    public PizzaResponseDto supprimerDeLaCarteParId(int id) {
+        Optional<Pizza> optPizza = pizzaDao.findById(id);
+        if (optPizza.isEmpty()) {
+            EntityNotFoundException entityNotFoundException = new EntityNotFoundException("Aucune Pizza à cette id");
+            log.error("Erreur : {} ", entityNotFoundException.getMessage());
+            throw entityNotFoundException;
+        }
+        Pizza pizza = optPizza.get();
+        pizza.setCommandable(false);
+        return toPizzaResponse(pizzaDao.save(pizza));
+    }
 
+    @Override
+    public List<PizzaResponseDto> trouverToutes(Filtre filtre) {
+     return  switch (filtre){
+            case COMMANDABLE -> pizzaDao.findByCommandableTrue().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
+            case RETIREE -> pizzaDao.findByCommandableFalse().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
+            case null -> pizzaDao.findAll().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
+        };
+    }
 
 
     //*************************************************************************
@@ -74,25 +97,35 @@ public class PizzaServiceImpl implements PizzaService {
             log.error(ERREUR_VERIFICATION_PIZZA, message);
             throw new PizzaException(message);
         }
-        if (pizzaRequest.prix().containsValue(null)){
+        if (pizzaRequest.prix().containsValue(null)) {
             message = "Un prix ne doit pas être null";
             log.error(ERREUR_VERIFICATION_PIZZA, message);
-            throw new PizzaException(message);}
-        if (pizzaRequest.prix().containsValue((double) 0)){
+            throw new PizzaException(message);
+        }
+        if (pizzaRequest.prix().containsValue((double) 0)) {
             message = "Un prix ne doit pas être égal à 0";
             log.error(ERREUR_VERIFICATION_PIZZA, message);
-            throw new PizzaException(message);}
+            throw new PizzaException(message);
         }
+
+        if (pizzaRequest.commandable() == null) {
+            message = "Précisez si la pizza est commandable";
+            log.error(ERREUR_VERIFICATION_PIZZA, message);
+            throw new PizzaException(message);
+        }
+    }
+
 
     private static PizzaResponseDto toPizzaResponse(Pizza pizza1) {
         List<String> listeIngredient = new ArrayList<>();
         pizza1.getIngredients().forEach(ingredient -> listeIngredient.add(ingredient.getNom()));
-        return new PizzaResponseDto(pizza1.getId(), pizza1.getNom(), listeIngredient, pizza1.getPrix());
+        return new PizzaResponseDto(pizza1.getId(), pizza1.getNom(), listeIngredient, pizza1.getPrix(), pizza1.getCommandable());
     }
 
     private Pizza toPizza(PizzaRequestDto pizzaRequest) {
 
         List<Ingredient> ingredients = new ArrayList<>();
+
         Optional<Ingredient> optionalIngredient;
 
         for (int i = 1; i <= pizzaRequest.idIngredient().size(); i++) {
@@ -109,6 +142,7 @@ public class PizzaServiceImpl implements PizzaService {
         pizza.setNom(pizzaRequest.nom());
         pizza.setIngredients(ingredients);
         pizza.setPrix(pizzaRequest.prix());
+        pizza.setCommandable(pizzaRequest.commandable());
         return pizza;
     }
 }
