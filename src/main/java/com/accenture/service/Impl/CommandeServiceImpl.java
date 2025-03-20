@@ -1,6 +1,7 @@
 package com.accenture.service.Impl;
 
 import com.accenture.exception.CommandeException;
+import com.accenture.repository.PizzaDao;
 import com.accenture.service.Interface.CommandeService;
 import com.accenture.service.dto.CommandeRequestDto;
 import com.accenture.service.dto.CommandeResponseDto;
@@ -15,18 +16,23 @@ public class CommandeServiceImpl implements CommandeService {
 
 
     public static final String ERREUR_VERIFICATION_COMMANDE = "Erreur verification Commande : {}";
+private PizzaDao pizzaDao;
 
-
+    /**
+     * Ajoute une nouvelle commande dans la base données
+     * @param commandeRequestDto Objet contenant les informations de la commande à ajouter
+     * @return un objet CommandeResponseDto qui représente la commande à ajouter
+     */
     @Override
     public CommandeResponseDto ajouter(CommandeRequestDto commandeRequestDto) throws CommandeException {
         verificationCommande(commandeRequestDto);
         return null;
     }
 
-
     //    *************************************************************************
-//    ************************ METHODES PRIVEES *******************************
-//    *************************************************************************
+    //    ************************ METHODES PRIVEES *******************************
+    //    *************************************************************************
+
     private static void verificationCommande(CommandeRequestDto commandeRequest) {
         String message = "";
         if (commandeRequest == null) {
@@ -69,6 +75,15 @@ public class CommandeServiceImpl implements CommandeService {
 
         }
     }
+
+//private Commande toCommande (CommandeRequestDto commandeRequestDto){
+//       pizzaDao.findAllById(commandeRequestDto.)
+//        return null;
+//}
+//
+//private  CommandeResponseDto toCommandeResponse (Commande commande){
+//        return null;
+//}
 
 
 

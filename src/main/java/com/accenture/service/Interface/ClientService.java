@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ClientService {
 
+
     ClientResponseDto ajouterClient(ClientRequestDto clientRequestDto) throws ClientException;
     ClientResponseDto trouverParId(int id) throws EntityNotFoundException;
     List<ClientResponseDto> afficherTousClients() throws ClientException;

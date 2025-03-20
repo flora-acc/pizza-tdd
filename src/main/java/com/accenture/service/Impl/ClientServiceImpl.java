@@ -27,6 +27,12 @@ public class ClientServiceImpl implements ClientService {
     private ClientDao clientDao;
     private ClientMapper clientMapper;
 
+    /**
+     * Crée une nouvelle entité Client
+     * @param clientRequestDto
+     * @return Un objet ClientResponseDto représentant le nouveau client créé.
+     * @throws ClientException Si clientRequestDto est null.
+     */
     @Override
     public ClientResponseDto ajouterClient(ClientRequestDto clientRequestDto) throws ClientException {
         verificationClient(clientRequestDto);
@@ -38,6 +44,12 @@ public class ClientServiceImpl implements ClientService {
         );
     }
 
+    /**
+     * Trouve un client dans la base de données grâces à son identifiant
+     * @param id Identifiant du client à trouver
+     * @return Un objet ClientResponseDto représentant le client trouvé
+     * @throws EntityNotFoundException si aucun client n'est trouvée
+     */
     @Override
     public ClientResponseDto trouverParId(int id) throws EntityNotFoundException {
         Optional<Client> optClient = clientDao.findById(id);
@@ -46,6 +58,10 @@ public class ClientServiceImpl implements ClientService {
         return clientMapper.toClientResponseDto(optClient.get());
     }
 
+    /**
+     * Récupère toutes les entités client dans la base de données et les convertit en DTO.
+     * @return Une liste d'objets ClientResponseDto.
+     */
     @Override
     public List<ClientResponseDto> afficherTousClients() throws ClientException {
         return clientDao.findAll().stream()

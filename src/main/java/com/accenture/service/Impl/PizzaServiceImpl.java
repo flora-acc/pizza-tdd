@@ -148,19 +148,19 @@ public class PizzaServiceImpl implements PizzaService {
 
         Optional<Ingredient> optionalIngredient;
 
-        for (int i = 1; i <= pizzaRequest.idIngredient().size(); i++) {
-            optionalIngredient = ingredientDao.findById(i);
-            if (optionalIngredient.isEmpty()) {
-                IngredientException ingredientException = new IngredientException("Ingrédient Invalide");
-                log.error("Erreur ingrédients : {} ", ingredientException.getMessage());
-                throw ingredientException;
-            }
-            ingredients.add(optionalIngredient.get());
-        }
+//        for (int i = 1; i <= pizzaRequest.idIngredient().size(); i++) {
+//            optionalIngredient = ingredientDao.findById(i);
+//            if (optionalIngredient.isEmpty()) {
+//                IngredientException ingredientException = new IngredientException("Ingrédient Invalide");
+//                log.error("Erreur ingrédients : {} ", ingredientException.getMessage());
+//                throw ingredientException;
+//            }
+//            ingredients.add(optionalIngredient.get());
+//        }
 
         Pizza pizza = new Pizza();
         pizza.setNom(pizzaRequest.nom());
-        pizza.setIngredients(ingredients);
+        pizza.setIngredients(ingredientDao.findAllById(pizzaRequest.idIngredient()));
         pizza.setPrix(pizzaRequest.prix());
         pizza.setCommandable(pizzaRequest.commandable());
         return pizza;
