@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/clients")
@@ -69,5 +70,18 @@ public class ClientController {
         ClientResponseDto clientResponse = clientService.trouverParId(id);
         log.info("trouverParId : {}", clientResponse);
         return ResponseEntity.ok(clientResponse);
+    }
+
+    @Operation(summary = "Afficher les clients")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Clients trouvés"),
+            @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle"),
+    })
+    @GetMapping
+    List<ClientResponseDto> afficherTousLesClients() {
+        log.info("Requête reçue pour récupérer la liste des clients.");
+        List<ClientResponseDto> clients = clientService.afficherTousClients();
+        log.debug("Nombre d'ingrédients trouvés' : {}", clients.size());
+        return clients;
     }
 }
