@@ -4,6 +4,7 @@ import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.shared.Filtre;
 import com.accenture.shared.Taille;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,15 +61,14 @@ class PizzaControllerTest {
     }
 
     @Test
-    void btrouverToutes () throws Exception
-   {
-       mockMvc.perform(MockMvcRequestBuilders.get("/pizzas")).
-               andExpect(status().isOk())
-               .andExpect(jsonPath("$.length()").value(3));
+    void btrouverToutes() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/pizzas")).
+                andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3));
     }
 
     @Test
-    void btrouverToutesCommandables() throws Exception{
+    void btrouverToutesCommandables() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/pizzas?filtre=COMMANDABLE")).
                 andExpect(status().isOk())
@@ -75,36 +76,45 @@ class PizzaControllerTest {
     }
 
     @Test
-    void btrouverToutesRetiree() throws Exception{
+    void btrouverToutesRetiree() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/pizzas?filtre=RETIREE")).
                 andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
     }
 
     @Test
-    void trouverParId() throws Exception{
+    void btrouverParId() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/pizzas/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nom").value("Hawaienne"));
     }
+
+    @Test
+    void btrouverToutesParNom() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/pizzas/nom?nom=Mar"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
+                .andExpect(MockMvcResultMatchers.content().string(CoreMatchers.containsString("Margarita")));
+    }
+
     @Test
     void supprimerPizza() throws Exception {
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.delete("/pizzas?id="+1)
+                        MockMvcRequestBuilders.delete("/pizzas?id=" + 1)
 
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.commandable").value(false));
     }
 
-@Test
-    void supprimerPizzaException() throws Exception
-{
-    mockMvc.perform(
-                    MockMvcRequestBuilders.delete("/pizzas?id="+6)
+    @Test
+    void supprimerPizzaException() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/pizzas?id=" + 6)
 
-            ).andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value("Aucune Pizza à cette id"));
-}
+                ).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Aucune Pizza à cette id"));
+    }
 }

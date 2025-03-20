@@ -20,6 +20,7 @@ INSERT INTO PIZZAS_PRIX (pizza_id, taille, prix) VALUES
 (2, 'MOYENNE', 13.00),
 (2, 'GRANDE', 15.00);
 
+
 INSERT INTO CLIENT (nom, prenom, email) VALUES
 ('Michel', 'Durand', 'michel@email.fr'),
 ('Bob', 'McCain', 'bob@email.fr');

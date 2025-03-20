@@ -15,4 +15,6 @@ public interface PizzaService {
     List<PizzaResponseDto> trouverToutes(Filtre filtre);
 
     PizzaResponseDto trouverParId(int i);
+
+    List<PizzaResponseDto> trouverParNom(String s);
 }
