@@ -1,10 +1,7 @@
 package com.accenture.repository.model;
 
 import com.accenture.shared.Taille;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +14,9 @@ public class PizzaTailleQte {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @OneToOne
     private Pizza pizza;
+
     private Taille taille;
     private Integer quantite;
 

@@ -16,6 +16,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Table( name = "pizzas")
 public class Pizza {
+
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
