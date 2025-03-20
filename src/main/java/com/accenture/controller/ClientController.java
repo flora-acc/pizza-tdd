@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/clients")
@@ -81,7 +80,7 @@ public class ClientController {
     List<ClientResponseDto> afficherTousLesClients() {
         log.info("Requête reçue pour récupérer la liste des clients.");
         List<ClientResponseDto> clients = clientService.afficherTousClients();
-        log.debug("Nombre d'ingrédients trouvés' : {}", clients.size());
+        log.debug("Nombre de clients trouvés' : {}", clients.size());
         return clients;
     }
 }
