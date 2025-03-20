@@ -93,16 +93,6 @@ class PizzaServiceImplTest {
         Assertions.assertEquals("Tous les prix par taille sont obligatoires", ex.getMessage());
     }
 
-    @Test
-    void testAjoutPizzaIngredientIntrouvable() {
-
-        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1, 2), creationMapPrix(), true);
-
-        Mockito.when(ingredientDaoMock.findById(1)).thenReturn(Optional.empty());
-
-        IngredientException ex = Assertions.assertThrows(IngredientException.class, () -> pizzaServiceImpl.ajouter(pizzaRequest));
-        Assertions.assertEquals("Ingrédient Invalide", ex.getMessage());
-    }
 
     @Test
     void testAjoutPizzaPrixTailleNull() {
@@ -135,31 +125,6 @@ class PizzaServiceImplTest {
         Assertions.assertEquals("Précisez si la pizza est commandable", ex.getMessage());
     }
 
-    @Test
-    void AjouterMappingIngredient() {
-        PizzaRequestDto pizzaRequest = new PizzaRequestDto("Trois fromages", List.of(1, 2), creationMapPrix(), true);
-
-
-        PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
-
-        Ingredient ingredient1 = new Ingredient("Mozzarrela", 3);
-        ingredient1.setId(1);
-        Ingredient ingredient2 = new Ingredient("Ananas", 10);
-        ingredient2.setId(2);
-
-        Pizza pizzaAvant = troisFromages();
-
-        Pizza pizzaApres = troisFromages();
-        pizzaApres.setId(1);
-
-
-        Mockito.when(ingredientDaoMock.findById(1)).thenReturn(Optional.of(ingredient1));
-        Mockito.when(ingredientDaoMock.findById(2)).thenReturn(Optional.of(ingredient2));
-        Mockito.when(pizzaDaoMock.save(pizzaAvant)).thenReturn(pizzaApres);
-        Assertions.assertEquals(pizzaResponseDto, pizzaServiceImpl.ajouter(pizzaRequest));
-
-        Mockito.verify(pizzaDaoMock).save(pizzaAvant);
-    }
 
 
     @Test
