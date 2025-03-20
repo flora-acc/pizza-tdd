@@ -27,7 +27,7 @@ class CommandeImplTest {
     @Test
     void testAjoutCommandeNull() {
         CommandeException ex = Assertions.assertThrows(CommandeException.class, () -> commandeServiceImpl.ajouter(null));
-        Assertions.assertEquals("La commande est null", ex.getMessage());
+        Assertions.assertEquals("La pizzaTailleQteList est null", ex.getMessage());
     }
 
     @Test
@@ -41,7 +41,7 @@ class CommandeImplTest {
     void testAjoutCommandeCommandeRequestNull() {
         CommandeRequestDto commande = new CommandeRequestDto(1,null);
         CommandeException ex = Assertions.assertThrows(CommandeException.class, () -> commandeServiceImpl.ajouter(commande));
-        Assertions.assertEquals("Le contenu de la commande est obligatoire", ex.getMessage());
+        Assertions.assertEquals("Le contenu de la pizzaTailleQteList est obligatoire", ex.getMessage());
     }
     @Test
     void testAjoutCommandeCommandeRequestIdPizzaNull() {

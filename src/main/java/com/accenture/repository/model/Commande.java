@@ -10,16 +10,18 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Data
-@Table(name = "commande")
+@Table(name = "pizzaTailleQteList")
 public class Commande {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
     private Client client;
 
-    @OneToMany
+
+    @OneToMany (cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PizzaTailleQte> pizzaTailleQteList;
 
     public Commande(int id) {

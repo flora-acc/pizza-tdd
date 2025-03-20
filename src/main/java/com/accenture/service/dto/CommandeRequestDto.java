@@ -5,7 +5,7 @@ import java.util.List;
 public record CommandeRequestDto(
         Integer idClient,
 
-        List<PizzaTailleQteRequestDto> commande
+        List<PizzaTailleQteRequestDto> pizzaTailleQteList
 ) {
 
 }

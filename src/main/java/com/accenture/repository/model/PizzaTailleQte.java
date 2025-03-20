@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 public class PizzaTailleQte {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private int id;
 
-    @OneToOne
+    @ManyToOne
     private Pizza pizza;
 
     private Taille taille;
