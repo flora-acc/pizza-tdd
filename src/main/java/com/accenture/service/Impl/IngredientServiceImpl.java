@@ -25,6 +25,11 @@ public class IngredientServiceImpl implements IngredientService {
     private IngredientDao ingredientDao;
     private IngredientMapper ingredientMapper;
 
+    /**
+     * Ajoute un ingrédient dans la base données
+     * @param ingredientRequest Objet contenant les informations de l'ingrédient à ajouter
+     * @return un objet IngredientResponseDto qui représente l'ingrédient à ajouter
+     */
     @Override
     public IngredientResponseDto ajouter(IngredientRequestDto ingredientRequest) {
         verificationIngredient(ingredientRequest);
@@ -33,15 +38,24 @@ public class IngredientServiceImpl implements IngredientService {
                         ingredientMapper.toIngredient(ingredientRequest)));
     }
 
+    /**
+     * Trouve un ingredient dans la base de données grâces à son identifiant
+     * @param id Identifiant de l'ingredient à trouver
+     * @return Un objet IngredientResponseDto représentant l'ingredient trouvé
+     * @throws EntityNotFoundException si aucun ingredient n'est trouvé
+     */
     @Override
-    public IngredientResponseDto trouverParId(int id) {
+    public IngredientResponseDto trouverParId(int id) throws EntityNotFoundException {
         Optional<Ingredient> optIngredient = ingredientDao.findById(id);
         if (optIngredient.isEmpty())
             throw new EntityNotFoundException("L'id n'existe pas en base");
         return ingredientMapper.toIngredientResponse(optIngredient.get());
     }
 
-
+    /**
+     * Récupère la liste de tous les ingrédients dans la base de données
+     * @return une liste d'objets IngredientResponseDto représentant tous les ingrédients
+     */
     @Override
     public List<IngredientResponseDto> afficherTousIngredients() throws IngredientException {
         return ingredientDao.findAll().stream()
@@ -49,6 +63,13 @@ public class IngredientServiceImpl implements IngredientService {
                 .toList();
     }
 
+    /**
+     * Met à jour partiellement un ingrédient existant dans la base de données
+     * @param id Identifiant de l'ingrédient à mettre à jour
+     * @param ingredientRequest Objet contenant les informations à mettre à jour
+     * @return Un objet IngredientResponseDto représentant l'ingrédient mise à jour
+     * @throws EntityNotFoundException Si aucun ingrédient n'est trouvé pour cet id
+     */
     @Override
     public IngredientResponseDto modifierPartiellementIngredient(int id, IngredientRequestDto ingredientRequest) throws EntityNotFoundException {
 

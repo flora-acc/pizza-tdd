@@ -5,6 +5,8 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @Data
@@ -13,6 +15,12 @@ public class Commande {
 
     @Id
     private int id;
+
+    @ManyToOne
+    private Client client;
+
+    @OneToMany
+    private List<PizzaTailleQte> pizzaTailleQteList;
 
     public Commande(int id) {
         this.id = id;

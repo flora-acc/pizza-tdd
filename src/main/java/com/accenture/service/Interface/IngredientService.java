@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IngredientService {
     IngredientResponseDto ajouter(IngredientRequestDto ingredientRequest);
-    IngredientResponseDto trouverParId(int id);
+    IngredientResponseDto trouverParId(int id) throws EntityNotFoundException;
 
     List<IngredientResponseDto> afficherTousIngredients() throws IngredientException;
 
