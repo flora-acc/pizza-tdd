@@ -76,7 +76,7 @@ class ClientControllerTest {
     }
 
     @Test
-    void atestAfficherTousClients() throws Exception {
+    void testAfficherTousClients() throws Exception {
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/clients"))
                 .andExpect(status().isOk())
