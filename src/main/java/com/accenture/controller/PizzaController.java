@@ -87,4 +87,11 @@ public class PizzaController {
        log.info("trouver par Id : {}", pizzaResponseDto);
        return ResponseEntity.ok(pizzaResponseDto);
     }
+
+    @GetMapping("/nom")
+    ResponseEntity<List> trouverParNom (@RequestParam String nom){
+        List<PizzaResponseDto> liste = pizzaService.trouverParNom(nom);
+        log.info("Trouver par nom : {}", liste );
+        return ResponseEntity.ok(liste);
+    }
 }

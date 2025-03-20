@@ -258,6 +258,40 @@ class PizzaServiceImplTest {
 
     }
 
+    @Test
+    void testTrouverparNomBlank(){
+  PizzaException ex =  Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.trouverParNom(""));
+  Assertions.assertEquals("La recherche ne doit pas être blank", ex.getMessage());
+    }
+
+    @Test
+    void testTrouverparNomNull(){
+  PizzaException ex =  Assertions.assertThrows(PizzaException.class, () -> pizzaServiceImpl.trouverParNom(null));
+  Assertions.assertEquals("La recherche ne doit pas être blank", ex.getMessage());
+    }
+
+
+    @Test
+    void testTrouverParNom(){
+        Pizza pizza1 = troisFromages();
+        pizza1.setId(1);
+        pizza1.setCommandable(true);
+        Pizza pizza2 = hawainne();
+        pizza2.setNom("Trois Hawainne");
+        pizza2.setId(2);
+        pizza2.setCommandable(true);
+        List<Pizza> ListPizza = List.of(pizza1, pizza2);
+
+        PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
+        PizzaResponseDto pizzaResponseDto2 = new PizzaResponseDto(2, "Trois Hawainne", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
+
+        List<PizzaResponseDto> listResponse = List.of(pizzaResponseDto, pizzaResponseDto2);
+
+        Mockito.when(pizzaDaoMock.findByNomContaining("Trois")).thenReturn(ListPizza);
+
+        Assertions.assertEquals(listResponse, pizzaServiceImpl.trouverParNom("Trois"));
+    }
+
 
 
 

@@ -62,12 +62,20 @@ public class PizzaServiceImpl implements PizzaService {
     @Override
     public PizzaResponseDto trouverParId(int id) {
         Optional<Pizza> optionalPizza = pizzaDao.findById(id);
-        if (optionalPizza.isEmpty()){
+        if (optionalPizza.isEmpty()) {
             EntityNotFoundException ex = new EntityNotFoundException("Aucune Pizza à cet ID");
             log.error("Erreur trouverParId : {} ", ex.getMessage());
             throw ex;
         }
         return toPizzaResponse(optionalPizza.get());
+    }
+
+    @Override
+    public List<PizzaResponseDto> trouverParNom(String nom) {
+        if (nom == null || nom.isBlank())
+            throw new PizzaException("La recherche ne doit pas être blank");
+
+        return pizzaDao.findByNomContaining(nom).stream().filter(Pizza::getCommandable).map(PizzaServiceImpl::toPizzaResponse).toList();
     }
 
 
