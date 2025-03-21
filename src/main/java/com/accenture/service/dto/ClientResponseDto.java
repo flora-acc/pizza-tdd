@@ -8,7 +8,6 @@ public record ClientResponseDto (
     int id,
     String prenom,
     String nom,
-    String email,
-    List<Commande> historiqueComm
+    String email
 ){
 }

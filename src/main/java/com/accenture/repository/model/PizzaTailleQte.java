@@ -25,4 +25,14 @@ public class PizzaTailleQte {
         this.taille = taille;
         this.quantite = quantite;
     }
+
+    public Double prixParPizza(){
+
+        Double prixUnitaire = getPizza()
+                .getPrix()
+                .get(getTaille());
+
+
+        return prixUnitaire * getQuantite();
+    }
 }

@@ -74,10 +74,10 @@ class ClientImplTest {
     void testAjouterOk() {
         ClientRequestDto clientRequestDto = new ClientRequestDto("Test", "Test", "test@email.fr");
         Commande commande1 = new Commande(1);
-        ClientResponseDto clientResponseDto = new ClientResponseDto(1, "Test", "Test", "test@email.fr", List.of(commande1));
+        ClientResponseDto clientResponseDto = new ClientResponseDto(1, "Test", "Test", "test@email.fr");
 
-        Client clientAvant = new Client("Test1", "Test1", "test@email.fr", List.of(commande1));
-        Client clientApres = new Client(1, "Test2", "Test2", "test@email.fr", List.of(commande1));
+        Client clientAvant = new Client("Test1", "Test1", "test@email.fr");
+        Client clientApres = new Client(1, "Test2", "Test2", "test@email.fr");
 
         Mockito.when(clientMapper.toClient(clientRequestDto)).thenReturn(clientAvant);
         Mockito.when(clientDao.save(clientAvant)).thenReturn(clientApres);
@@ -98,8 +98,8 @@ class ClientImplTest {
     @Test
     void testTrouverParIdOk() {
         Commande commande1 = new Commande(1);
-        Client client1 = new Client("Test1","Test1","test@email.fr",List.of(commande1));
-        ClientResponseDto clientResponseDto = new ClientResponseDto(1, "Test", "Test","test@email.fr", List.of(commande1));
+        Client client1 = new Client("Test1","Test1","test@email.fr");
+        ClientResponseDto clientResponseDto = new ClientResponseDto(1, "Test", "Test","test@email.fr");
 
         Mockito.when(clientDao.findById(1)).thenReturn(Optional.of(client1));
         Mockito.when(clientMapper.toClientResponseDto(client1)).thenReturn(clientResponseDto);
@@ -114,12 +114,12 @@ class ClientImplTest {
     @Test
     void testAfficherTousClients() {
         Commande commande1 = new Commande(1);
-        Client client1 = new Client("Test1", "Test1", "test@email.fr", List.of(commande1));
-        Client client2 = new Client(1, "Test2", "Test2", "test@email.fr", List.of(commande1));
+        Client client1 = new Client("Test1", "Test1", "test@email.fr");
+        Client client2 = new Client(1, "Test2", "Test2", "test@email.fr");
         List<Client> clients = List.of(client1, client2);
 
-        ClientResponseDto client1Response = new ClientResponseDto(1,"Test1", "Test1", "test@email.fr", List.of(commande1));
-        ClientResponseDto client2Response = new ClientResponseDto(2, "Test2", "Test2", "test@email.fr", List.of(commande1));
+        ClientResponseDto client1Response = new ClientResponseDto(1,"Test1", "Test1", "test@email.fr");
+        ClientResponseDto client2Response = new ClientResponseDto(2, "Test2", "Test2", "test@email.fr");
         List<ClientResponseDto> dtos = List.of(client1Response, client2Response);
 
         Mockito.when(clientDao.findAll()).thenReturn(clients);

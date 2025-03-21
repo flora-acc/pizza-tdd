@@ -1,16 +1,18 @@
 package com.accenture.repository.model;
 
+import com.accenture.shared.Status;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @Data
-@Table(name = "pizzaTailleQteList")
+@Table(name = "commandes")
 public class Commande {
 
     @Id
@@ -20,12 +22,29 @@ public class Commande {
     @ManyToOne
     private Client client;
 
+    private LocalDate date;
+    @Enumerated(value = EnumType.STRING)
+    private Status status;
 
-    @OneToMany (cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Double prix;
+
+
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PizzaTailleQte> pizzaTailleQteList;
 
     public Commande(int id) {
         this.id = id;
     }
+
+
+
+    public Double calculerPrix() {
+        return getPizzaTailleQteList()
+                .stream()
+                .mapToDouble(PizzaTailleQte::prixParPizza)
+                .sum();
+    }
+
+
 }
 

@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "client")
+@Table(name = "clients")
 public class Client {
 
     @Id
@@ -23,13 +23,10 @@ public class Client {
     private String prenom;
     private String email;
 
-    @ManyToMany
-    List<Commande> historiqueComm;
 
-    public Client(String nom, String prenom, String email, List<Commande> historiqueComm) {
+    public Client(String nom, String prenom, String email) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
-        this.historiqueComm = historiqueComm;
     }
 }

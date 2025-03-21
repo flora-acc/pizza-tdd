@@ -11,11 +11,15 @@ import com.accenture.service.dto.CommandeRequestDto;
 import com.accenture.service.dto.CommandeResponseDto;
 import com.accenture.service.dto.PizzaTailleQteRequestDto;
 import com.accenture.service.dto.PizzaTailleQteResponseDto;
+import com.accenture.shared.Status;
+import com.accenture.shared.Taille;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Slf4j
 @Service
@@ -35,25 +39,23 @@ public class CommandeServiceImpl implements CommandeService {
      * @return un objet CommandeResponseDto qui représente la pizzaTailleQteList à ajouter
      */
     //TODO Gérer Transactionnal
-
-
     @Transactional
     @Override
     public CommandeResponseDto ajouter(CommandeRequestDto commandeRequestDto) throws CommandeException {
         verificationCommande(commandeRequestDto);
-       Commande commande = toCommande(commandeRequestDto);
-       //retirerIngredientStock(commande);
-       commandeDao.save(commande);
+        Commande commande = toCommande(commandeRequestDto);
+        //retirerIngredientStock(commande);
+        commande.setPrix(commande.calculerPrix());
+        commande.setDate(LocalDate.now());
+        commande.setStatus(Status.EN_ATTENTE);
+        commandeDao.save(commande);
         return toCommandeResponse(commande);
     }
+
 
     //    *************************************************************************
     //    ************************ METHODES PRIVEES *******************************
     //    *************************************************************************
-
-
-
-
 
 
     private void verificationCommande(CommandeRequestDto commandeRequest) {
@@ -99,7 +101,6 @@ public class CommandeServiceImpl implements CommandeService {
         }
     }
 
-
     private Commande toCommande(CommandeRequestDto commandeRequestDto) {
         Commande commande = new Commande();
         commande.setClient(
@@ -114,11 +115,13 @@ public class CommandeServiceImpl implements CommandeService {
         return commande;
     }
 
-
     private CommandeResponseDto toCommandeResponse(Commande commande) {
-        return new CommandeResponseDto(commande.getId()
-                , commande.getClient().getId()
-                ,commande.getPizzaTailleQteList().stream().map(this::toPizzaTailleQteResponseDto).toList());
+        return new CommandeResponseDto(commande.getId(),
+                commande.getClient().getId(),
+                commande.getPizzaTailleQteList().stream().map(this::toPizzaTailleQteResponseDto).toList(),
+                commande.getDate(),
+                commande.getStatus(),
+                commande.getPrix());
     }
 
     private PizzaTailleQte toPizzaTailleQte(PizzaTailleQteRequestDto pizzaTailleQteRequestDto) {
@@ -131,7 +134,7 @@ public class CommandeServiceImpl implements CommandeService {
         return pizzaTailleQte;
     }
 
-    private PizzaTailleQteResponseDto toPizzaTailleQteResponseDto( PizzaTailleQte pizzaTailleQte){
+    private PizzaTailleQteResponseDto toPizzaTailleQteResponseDto(PizzaTailleQte pizzaTailleQte) {
         return new PizzaTailleQteResponseDto(pizzaTailleQte.getPizza().getNom(), pizzaTailleQte.getTaille(), pizzaTailleQte.getQuantite());
     }
 
