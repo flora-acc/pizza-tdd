@@ -74,7 +74,7 @@ public class PizzaController {
 
     @Operation(summary = "Supprimer une Pizza")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Pizza supprimée"),
+            @ApiResponse(responseCode = "200", description = "Pizza supprimée"),
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
     })
     @DeleteMapping
@@ -86,7 +86,7 @@ public class PizzaController {
 
     @Operation(summary = "Trouver Pizza par filtre")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Pizzas trouvées"),
+            @ApiResponse(responseCode = "200", description = "Pizzas trouvées"),
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
     })
     @GetMapping()
@@ -98,7 +98,7 @@ public class PizzaController {
 
     @Operation(summary = "Trouver une Pizza par Id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Pizza trouvée"),
+            @ApiResponse(responseCode = "200", description = "Pizza trouvée"),
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
     })
     @GetMapping("/{id}")
@@ -110,7 +110,7 @@ public class PizzaController {
 
     @Operation(summary = "Trouver une Pizza par nom")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Pizza trouvée"),
+            @ApiResponse(responseCode = "200", description = "Pizza trouvée"),
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
     })
     @GetMapping("/nom")

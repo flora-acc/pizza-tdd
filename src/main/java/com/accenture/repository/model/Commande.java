@@ -1,6 +1,6 @@
 package com.accenture.repository.model;
 
-import com.accenture.shared.Status;
+import com.accenture.shared.Statut;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import lombok.Data;
@@ -24,7 +24,7 @@ public class Commande {
 
     private LocalDate date;
     @Enumerated(value = EnumType.STRING)
-    private Status status;
+    private Statut statut;
 
     private Double prix;
 

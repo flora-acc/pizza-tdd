@@ -9,15 +9,13 @@ import com.accenture.repository.IngredientDao;
 import com.accenture.repository.PizzaDao;
 import com.accenture.repository.model.Commande;
 import com.accenture.repository.model.Ingredient;
-import com.accenture.repository.model.Pizza;
 import com.accenture.repository.model.PizzaTailleQte;
 import com.accenture.service.Interface.CommandeService;
 import com.accenture.service.dto.CommandeRequestDto;
 import com.accenture.service.dto.CommandeResponseDto;
 import com.accenture.service.dto.PizzaTailleQteRequestDto;
 import com.accenture.service.dto.PizzaTailleQteResponseDto;
-import com.accenture.shared.Status;
-import com.accenture.shared.Taille;
+import com.accenture.shared.Statut;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -61,9 +59,42 @@ public class CommandeServiceImpl implements CommandeService {
 
         commande.setPrix(commande.calculerPrix());
         commande.setDate(LocalDate.now());
-        commande.setStatus(Status.EN_ATTENTE);
+        commande.setStatut(Statut.EN_ATTENTE);
         commandeDao.save(commande);
         return toCommandeResponse(commande);
+    }
+
+    @Override
+    public CommandeResponseDto trouverParId(int id) {
+        Optional<Commande> commande = commandeDao.findById(id);
+        if (commande.isEmpty()) {
+            EntityNotFoundException entityNotFoundException = new EntityNotFoundException("La commande n'existe pas en base de donnée");
+            log.error("Erreur Commande par Id : {}", entityNotFoundException.getMessage());
+            throw entityNotFoundException;
+        }
+        return toCommandeResponse(commande.get());
+    }
+
+    @Override
+    public List<CommandeResponseDto> trouverToutes() {
+        return commandeDao.findAll().stream().map(this::toCommandeResponse).toList();
+    }
+
+    @Override
+    public CommandeResponseDto modifierStatus(int id, Statut statut) {
+        Optional<Commande> optional = commandeDao.findById(id);
+        if (optional.isEmpty()) {
+            EntityNotFoundException entityNotFoundException = new EntityNotFoundException("La commande n'existe pas en base de donnée");
+            log.error("Erreur Commande par Id : {}", entityNotFoundException.getMessage());
+            throw entityNotFoundException;
+        }
+        optional.get().setStatut(statut);
+        return toCommandeResponse(commandeDao.save(optional.get()));
+    }
+
+    @Override
+    public List<CommandeResponseDto> trouverParStatut(Statut statut) {
+      return commandeDao.findByStatut(statut).stream().map(this::toCommandeResponse).toList();
     }
 
 
@@ -167,7 +198,7 @@ public class CommandeServiceImpl implements CommandeService {
                 commande.getClient().getId(),
                 commande.getPizzaTailleQteList().stream().map(this::toPizzaTailleQteResponseDto).toList(),
                 commande.getDate(),
-                commande.getStatus(),
+                commande.getStatut(),
                 commande.getPrix());
     }
 

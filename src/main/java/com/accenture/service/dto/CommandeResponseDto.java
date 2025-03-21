@@ -1,7 +1,6 @@
 package com.accenture.service.dto;
 
-import com.accenture.shared.Status;
-import com.accenture.shared.Taille;
+import com.accenture.shared.Statut;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +10,7 @@ public record CommandeResponseDto(
       int idClient,
       List<PizzaTailleQteResponseDto> pizzaTailleQteResponseDtoList,
       LocalDate date,
-      Status status,
+      Statut statut,
       Double prix
 ) {
 }
