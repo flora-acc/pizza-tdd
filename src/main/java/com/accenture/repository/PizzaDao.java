@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PizzaDao extends JpaRepository<Pizza, Integer> {
+
     List<Pizza> findByCommandableTrue();
     List<Pizza> findByCommandableFalse();
 
     List<Pizza> findByNomContaining(String nom);
+    List<Pizza> findByIngredientsId(int ingredientId);
 }

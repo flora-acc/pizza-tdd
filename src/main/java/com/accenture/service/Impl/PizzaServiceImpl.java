@@ -1,6 +1,5 @@
 package com.accenture.service.Impl;
 
-import com.accenture.exception.IngredientException;
 import com.accenture.exception.PizzaException;
 import com.accenture.repository.IngredientDao;
 import com.accenture.repository.PizzaDao;
@@ -53,14 +52,14 @@ public class PizzaServiceImpl implements PizzaService {
     public List<PizzaResponseDto> trouverToutes(Filtre filtre) {
         return switch (filtre) {
             case COMMANDABLE ->
-                    pizzaDao.findByCommandableTrue().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
-            case RETIREE -> pizzaDao.findByCommandableFalse().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
-            case null -> pizzaDao.findAll().stream().map(PizzaServiceImpl::toPizzaResponse).toList();
+                    pizzaDao.findByCommandableTrue().stream().map(this::toPizzaResponse).toList();
+            case RETIREE -> pizzaDao.findByCommandableFalse().stream().map(this::toPizzaResponse).toList();
+            case null -> pizzaDao.findAll().stream().map(this::toPizzaResponse).toList();
         };
     }
 
     @Override
-    public PizzaResponseDto trouverParId(int id) {
+    public PizzaResponseDto trouverParId(int id) throws EntityNotFoundException {
         Optional<Pizza> optionalPizza = pizzaDao.findById(id);
         if (optionalPizza.isEmpty()) {
             EntityNotFoundException ex = new EntityNotFoundException("Aucune Pizza à cet ID");
@@ -75,7 +74,26 @@ public class PizzaServiceImpl implements PizzaService {
         if (nom == null || nom.isBlank())
             throw new PizzaException("La recherche ne doit pas être blank");
 
-        return pizzaDao.findByNomContaining(nom).stream().filter(Pizza::getCommandable).map(PizzaServiceImpl::toPizzaResponse).toList();
+        return pizzaDao.findByNomContaining(nom).stream().filter(Pizza::getCommandable).map(this::toPizzaResponse).toList();
+    }
+
+    @Override
+    public List<PizzaResponseDto> trouverPizzaParIdIngredient(int ingredientId) throws EntityNotFoundException {
+        Optional<Ingredient> optionalIngredient = ingredientDao.findById(ingredientId);
+
+        if (optionalIngredient.isEmpty()) {
+            EntityNotFoundException ex = new EntityNotFoundException("Aucun ingrédient trouvé avec cet ID");
+            log.error("Erreur trouverPizzaParIngredientId : {}", ex.getMessage());
+            throw ex;
+        }
+        Ingredient ingredient = optionalIngredient.get();
+
+        List<Pizza> pizzas = pizzaDao.findByIngredientsId(ingredientId);
+
+        return pizzas
+                .stream()
+                .map(this::toPizzaResponse)
+                .toList();
     }
 
 
@@ -136,7 +154,7 @@ public class PizzaServiceImpl implements PizzaService {
     }
 
 
-    private static PizzaResponseDto toPizzaResponse(Pizza pizza1) {
+    private PizzaResponseDto toPizzaResponse(Pizza pizza1) {
         List<String> listeIngredient = new ArrayList<>();
         pizza1.getIngredients().forEach(ingredient -> listeIngredient.add(ingredient.getNom()));
         return new PizzaResponseDto(pizza1.getId(), pizza1.getNom(), listeIngredient, pizza1.getPrix(), pizza1.getCommandable());
