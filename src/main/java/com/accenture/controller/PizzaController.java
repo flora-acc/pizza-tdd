@@ -33,6 +33,9 @@ public class PizzaController {
     public PizzaController(PizzaService pizzaService) {
         this.pizzaService = pizzaService;
     }
+
+
+
     @Operation(summary = "Ajouter une Pizza")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Pizza ajoutée"),
@@ -67,6 +70,13 @@ public class PizzaController {
                 .toUri();
         return ResponseEntity.created(location).body(pizzaResponseDto);
     }
+
+
+    @Operation(summary = "Supprimer une Pizza")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Pizza supprimée"),
+            @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
+    })
     @DeleteMapping
     ResponseEntity<PizzaResponseDto> supprimerPizzaDeLaCarte(@RequestParam int id){
        PizzaResponseDto pizzaResponseDto = pizzaService.supprimerDeLaCarteParId(id);
@@ -74,6 +84,11 @@ public class PizzaController {
         return ResponseEntity.status(HttpStatus.OK).body(pizzaResponseDto);
     }
 
+    @Operation(summary = "Trouver Pizza par filtre")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Pizzas trouvées"),
+            @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
+    })
     @GetMapping()
     ResponseEntity<List> trouverToutesParFiltre (@RequestParam (required = false) Filtre filtre){
         List<PizzaResponseDto> liste = pizzaService.trouverToutes(filtre);
@@ -81,6 +96,11 @@ public class PizzaController {
        return ResponseEntity.status(HttpStatus.OK).body(liste);
     }
 
+    @Operation(summary = "Trouver une Pizza par Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Pizza trouvée"),
+            @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
+    })
     @GetMapping("/{id}")
     ResponseEntity<PizzaResponseDto> trouverParId (@PathVariable int id){
         PizzaResponseDto pizzaResponseDto = pizzaService.trouverParId(id);
@@ -88,6 +108,11 @@ public class PizzaController {
        return ResponseEntity.ok(pizzaResponseDto);
     }
 
+    @Operation(summary = "Trouver une Pizza par nom")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Pizza trouvée"),
+            @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
+    })
     @GetMapping("/nom")
     ResponseEntity<List> trouverParNom (@RequestParam String nom){
         List<PizzaResponseDto> liste = pizzaService.trouverParNom(nom);

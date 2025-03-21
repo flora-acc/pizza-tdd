@@ -1,10 +1,15 @@
 package com.accenture.service.Impl;
 
 import com.accenture.exception.CommandeException;
+import com.accenture.exception.IngredientException;
+import com.accenture.exception.PizzaException;
 import com.accenture.repository.ClientDao;
 import com.accenture.repository.CommandeDao;
+import com.accenture.repository.IngredientDao;
 import com.accenture.repository.PizzaDao;
 import com.accenture.repository.model.Commande;
+import com.accenture.repository.model.Ingredient;
+import com.accenture.repository.model.Pizza;
 import com.accenture.repository.model.PizzaTailleQte;
 import com.accenture.service.Interface.CommandeService;
 import com.accenture.service.dto.CommandeRequestDto;
@@ -20,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,6 +38,7 @@ public class CommandeServiceImpl implements CommandeService {
     private PizzaDao pizzaDao;
     private ClientDao clientDao;
     private CommandeDao commandeDao;
+    private IngredientDao ingredientDao;
 
     /**
      * Ajoute une nouvelle pizzaTailleQteList dans la base données
@@ -38,13 +46,19 @@ public class CommandeServiceImpl implements CommandeService {
      * @param commandeRequestDto Objet contenant les informations de la pizzaTailleQteList à ajouter
      * @return un objet CommandeResponseDto qui représente la pizzaTailleQteList à ajouter
      */
-    //TODO Gérer Transactionnal
     @Transactional
     @Override
     public CommandeResponseDto ajouter(CommandeRequestDto commandeRequestDto) throws CommandeException {
+        // On vérifie les inputs de la commande RequestDto
         verificationCommande(commandeRequestDto);
+        // On transforme la commandeRequest en Commande
         Commande commande = toCommande(commandeRequestDto);
-        //retirerIngredientStock(commande);
+        //Check le status de la pizza, au cas ou le client rentre une pizza retirée de la carte
+        checkPizzaCommandable(commande);
+        //Retire les ingrédients du stock
+        retirerIngredientStock(commande);
+
+
         commande.setPrix(commande.calculerPrix());
         commande.setDate(LocalDate.now());
         commande.setStatus(Status.EN_ATTENTE);
@@ -56,6 +70,40 @@ public class CommandeServiceImpl implements CommandeService {
     //    *************************************************************************
     //    ************************ METHODES PRIVEES *******************************
     //    *************************************************************************
+
+
+    private void checkPizzaCommandable(Commande commande) {
+        commande.getPizzaTailleQteList().forEach(this::verifierPizza);
+    }
+
+    private void verifierPizza(PizzaTailleQte pizzaTailleQte) {
+        if (!pizzaTailleQte.getPizza().getCommandable()) {
+            PizzaException pizzaException = new PizzaException("La pizza n'est pas commandable : " + pizzaTailleQte.getPizza().getNom());
+            log.error(ERREUR_VERIFICATION_COMMANDE, pizzaException.getMessage());
+            throw pizzaException;
+        }
+    }
+
+    private void retirerIngredientStock(Commande commande) {
+        commande.getPizzaTailleQteList().forEach(this::retirerIngredientPizzaTailleQte);
+    }
+
+    private void retirerIngredientPizzaTailleQte(PizzaTailleQte pizzaTailleQte) {
+        for (int i = 1; i <= pizzaTailleQte.getQuantite(); i++) {
+            pizzaTailleQte.getPizza().getIngredients().forEach(this::decrementerIngredient);
+        }
+    }
+
+    private void decrementerIngredient(Ingredient ingredient) {
+        Ingredient ingredientEnBase = ingredientDao.findById(ingredient.getId()).orElseThrow(() -> new EntityNotFoundException("Ingrédient Not Found"));
+        if (ingredientEnBase.getQuantite() < 1) {
+            String message = "Ingrédient Insuffisant " + ingredientEnBase.getNom();
+            log.error(ERREUR_VERIFICATION_COMMANDE, message);
+            throw new IngredientException(message);
+        }
+        ingredientEnBase.setQuantite(ingredientEnBase.getQuantite() - 1);
+
+    }
 
 
     private void verificationCommande(CommandeRequestDto commandeRequest) {
@@ -97,7 +145,6 @@ public class CommandeServiceImpl implements CommandeService {
                 log.error(ERREUR_VERIFICATION_COMMANDE, message);
                 throw new CommandeException(message);
             }
-
         }
     }
 
