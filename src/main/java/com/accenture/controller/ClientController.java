@@ -1,10 +1,8 @@
 package com.accenture.controller;
 
-import com.accenture.service.Interface.ClientService;
+import com.accenture.service.inter.ClientService;
 import com.accenture.service.dto.ClientRequestDto;
 import com.accenture.service.dto.ClientResponseDto;
-import com.accenture.service.dto.IngredientRequestDto;
-import com.accenture.service.dto.IngredientResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -23,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/clients")
 @Slf4j
-@Tag(name = "Gestion des clients", description = "Interface de gestion des clients")
+@Tag(name = "Gestion des clients", description = "inter de gestion des clients")
 public class ClientController {
 
     private ClientService clientService;

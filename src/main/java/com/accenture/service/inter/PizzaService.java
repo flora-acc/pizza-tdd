@@ -1,4 +1,4 @@
-package com.accenture.service.Interface;
+package com.accenture.service.inter;
 
 import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;

@@ -1,4 +1,4 @@
-package com.accenture.service.Impl;
+package com.accenture.service.impl;
 
 import com.accenture.exception.CommandeException;
 import com.accenture.exception.IngredientException;
@@ -10,7 +10,7 @@ import com.accenture.repository.PizzaDao;
 import com.accenture.repository.model.Commande;
 import com.accenture.repository.model.Ingredient;
 import com.accenture.repository.model.PizzaTailleQte;
-import com.accenture.service.Interface.CommandeService;
+import com.accenture.service.inter.CommandeService;
 import com.accenture.service.dto.CommandeRequestDto;
 import com.accenture.service.dto.CommandeResponseDto;
 import com.accenture.service.dto.PizzaTailleQteRequestDto;
@@ -108,7 +108,7 @@ public class CommandeServiceImpl implements CommandeService {
     }
 
     private void verifierPizza(PizzaTailleQte pizzaTailleQte) {
-        if (!pizzaTailleQte.getPizza().getCommandable()) {
+        if (pizzaTailleQte.getPizza().getCommandable() == null || !pizzaTailleQte.getPizza().getCommandable()) {
             PizzaException pizzaException = new PizzaException("La pizza n'est pas commandable : " + pizzaTailleQte.getPizza().getNom());
             log.error(ERREUR_VERIFICATION_COMMANDE, pizzaException.getMessage());
             throw pizzaException;

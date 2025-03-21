@@ -2,7 +2,7 @@ package com.accenture.service;
 
 import com.accenture.exception.CommandeException;
 import com.accenture.repository.CommandeDao;
-import com.accenture.service.Impl.CommandeServiceImpl;
+import com.accenture.service.impl.CommandeServiceImpl;
 import com.accenture.service.dto.CommandeRequestDto;
 import com.accenture.service.dto.PizzaTailleQteRequestDto;
 import com.accenture.shared.Taille;
@@ -32,7 +32,7 @@ class CommandeImplTest {
 
     @Test
     void testAjoutCommandeClientNull() {
-        CommandeRequestDto commande = new CommandeRequestDto(null,List.of(creerPizzaRequest()));
+        CommandeRequestDto commande = new CommandeRequestDto(null,null);
         CommandeException ex = Assertions.assertThrows(CommandeException.class, () -> commandeServiceImpl.ajouter(commande));
         Assertions.assertEquals("Le client est obligatoire", ex.getMessage());
     }
@@ -63,14 +63,5 @@ class CommandeImplTest {
         Assertions.assertEquals("La quantite est obligatoire", ex.getMessage());
     }
 
-    // METHODES PRIVEES
 
-    private static List<PizzaTailleQteRequestDto> pizzaTailleQteRequestDtos() {
-        return null;
-    }
-
-    private static PizzaTailleQteRequestDto creerPizzaRequest() {
-        return new PizzaTailleQteRequestDto(1, Taille.GRANDE, 10);
-
-    }
 }

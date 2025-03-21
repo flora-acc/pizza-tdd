@@ -3,7 +3,7 @@ package com.accenture.service;
 import com.accenture.exception.IngredientException;
 import com.accenture.repository.IngredientDao;
 import com.accenture.repository.model.Ingredient;
-import com.accenture.service.Impl.IngredientServiceImpl;
+import com.accenture.service.impl.IngredientServiceImpl;
 import com.accenture.service.dto.IngredientRequestDto;
 import com.accenture.service.dto.IngredientResponseDto;
 import com.accenture.service.mapper.IngredientMapper;
@@ -190,7 +190,7 @@ class IngredientImplTest {
         Ingredient ingredientMisAJour = new Ingredient("Tomate", -4);
 
         // réponse attendue après modification
-        IngredientResponseDto ingredientResponse = new IngredientResponseDto(1, "Tomate", -4);
+
         //On dit à Mockito de renvoyer un Optional contenant ingredientExistant
         Mockito.when(ingredientDao.findById(1)).thenReturn((Optional.of(ingredientExistant)));
 

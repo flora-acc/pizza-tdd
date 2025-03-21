@@ -1,13 +1,12 @@
 package com.accenture.service;
 
-import com.accenture.exception.IngredientException;
 import com.accenture.exception.PizzaException;
 import com.accenture.repository.IngredientDao;
 
 import com.accenture.repository.PizzaDao;
 import com.accenture.repository.model.Ingredient;
 import com.accenture.repository.model.Pizza;
-import com.accenture.service.Impl.PizzaServiceImpl;
+import com.accenture.service.impl.PizzaServiceImpl;
 import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
 import com.accenture.shared.Filtre;
@@ -21,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -83,7 +81,7 @@ class PizzaServiceImplTest {
 
     @Test
     void testAjoutPizzaPrixNotComplete() {
-        Map<Taille, Double> mapPrix = new HashMap<>();
+        Map<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.00);
 
@@ -151,14 +149,14 @@ class PizzaServiceImplTest {
         pizza1.setId(1);
         Pizza pizza2 = hawainne();
         pizza2.setId(2);
-        List<Pizza> ListPizza = List.of(pizza1, pizza2);
+        List<Pizza> listePizza = List.of(pizza1, pizza2);
 
         PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
         PizzaResponseDto pizzaResponseDto2 = new PizzaResponseDto(2, "Hawainne", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
 
         List<PizzaResponseDto> listResponse = List.of(pizzaResponseDto, pizzaResponseDto2);
 
-        Mockito.when(pizzaDaoMock.findByCommandableTrue()).thenReturn(ListPizza);
+        Mockito.when(pizzaDaoMock.findByCommandableTrue()).thenReturn(listePizza);
 
         Assertions.assertEquals(listResponse, pizzaServiceImpl.trouverToutes(Filtre.COMMANDABLE));
 
@@ -172,14 +170,14 @@ class PizzaServiceImplTest {
         Pizza pizza2 = hawainne();
         pizza2.setId(2);
         pizza2.setCommandable(false);
-        List<Pizza> ListPizza = List.of(pizza1, pizza2);
+        List<Pizza> listPizza = List.of(pizza1, pizza2);
 
         PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), false);
         PizzaResponseDto pizzaResponseDto2 = new PizzaResponseDto(2, "Hawainne", List.of("Mozzarrela", "Ananas"), creationMapPrix(), false);
 
         List<PizzaResponseDto> listResponse = List.of(pizzaResponseDto, pizzaResponseDto2);
 
-        Mockito.when(pizzaDaoMock.findByCommandableFalse()).thenReturn(ListPizza);
+        Mockito.when(pizzaDaoMock.findByCommandableFalse()).thenReturn(listPizza);
 
         Assertions.assertEquals(listResponse, pizzaServiceImpl.trouverToutes(Filtre.RETIREE));
 
@@ -192,14 +190,14 @@ class PizzaServiceImplTest {
         Pizza pizza2 = hawainne();
         pizza2.setId(2);
         pizza2.setCommandable(false);
-        List<Pizza> ListPizza = List.of(pizza1, pizza2);
+        List<Pizza> listPizza = List.of(pizza1, pizza2);
 
         PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), false);
         PizzaResponseDto pizzaResponseDto2 = new PizzaResponseDto(2, "Hawainne", List.of("Mozzarrela", "Ananas"), creationMapPrix(), false);
 
         List<PizzaResponseDto> listResponse = List.of(pizzaResponseDto, pizzaResponseDto2);
 
-        Mockito.when(pizzaDaoMock.findAll()).thenReturn(ListPizza);
+        Mockito.when(pizzaDaoMock.findAll()).thenReturn(listPizza);
 
         Assertions.assertEquals(listResponse, pizzaServiceImpl.trouverToutes(null));
 
@@ -245,14 +243,14 @@ class PizzaServiceImplTest {
         pizza2.setNom("Trois Hawainne");
         pizza2.setId(2);
         pizza2.setCommandable(true);
-        List<Pizza> ListPizza = List.of(pizza1, pizza2);
+        List<Pizza> listPizza = List.of(pizza1, pizza2);
 
         PizzaResponseDto pizzaResponseDto = new PizzaResponseDto(1, "Trois fromages", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
         PizzaResponseDto pizzaResponseDto2 = new PizzaResponseDto(2, "Trois Hawainne", List.of("Mozzarrela", "Ananas"), creationMapPrix(), true);
 
         List<PizzaResponseDto> listResponse = List.of(pizzaResponseDto, pizzaResponseDto2);
 
-        Mockito.when(pizzaDaoMock.findByNomContaining("Trois")).thenReturn(ListPizza);
+        Mockito.when(pizzaDaoMock.findByNomContaining("Trois")).thenReturn(listPizza);
 
         Assertions.assertEquals(listResponse, pizzaServiceImpl.trouverParNom("Trois"));
     }
@@ -302,7 +300,7 @@ class PizzaServiceImplTest {
     }
 
     private static Map<Taille, Double> creationMapPrix() {
-        Map<Taille, Double> mapPrix = new HashMap<>();
+        Map<Taille, Double> mapPrix = new EnumMap<>(Taille.class);
         mapPrix.put(Taille.PETITE, 10.00);
         mapPrix.put(Taille.MOYENNE, 12.0);
         mapPrix.put(Taille.GRANDE, 14.00);

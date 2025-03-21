@@ -1,9 +1,9 @@
-package com.accenture.service.Impl;
+package com.accenture.service.impl;
 
 import com.accenture.exception.IngredientException;
 import com.accenture.repository.IngredientDao;
 import com.accenture.repository.model.Ingredient;
-import com.accenture.service.Interface.IngredientService;
+import com.accenture.service.inter.IngredientService;
 import com.accenture.service.dto.IngredientRequestDto;
 import com.accenture.service.dto.IngredientResponseDto;
 import com.accenture.service.mapper.IngredientMapper;

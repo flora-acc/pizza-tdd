@@ -1,16 +1,14 @@
 package com.accenture.service;
 
 import com.accenture.exception.ClientException;
-import com.accenture.exception.IngredientException;
+
 import com.accenture.repository.ClientDao;
 import com.accenture.repository.model.Client;
-import com.accenture.repository.model.Commande;
-import com.accenture.repository.model.Ingredient;
-import com.accenture.service.Impl.ClientServiceImpl;
+
+import com.accenture.service.impl.ClientServiceImpl;
 import com.accenture.service.dto.ClientRequestDto;
 import com.accenture.service.dto.ClientResponseDto;
-import com.accenture.service.dto.IngredientRequestDto;
-import com.accenture.service.dto.IngredientResponseDto;
+
 import com.accenture.service.mapper.ClientMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
@@ -73,7 +71,7 @@ class ClientImplTest {
     @Test
     void testAjouterOk() {
         ClientRequestDto clientRequestDto = new ClientRequestDto("Test", "Test", "test@email.fr");
-        Commande commande1 = new Commande(1);
+
         ClientResponseDto clientResponseDto = new ClientResponseDto(1, "Test", "Test", "test@email.fr");
 
         Client clientAvant = new Client("Test1", "Test1", "test@email.fr");
@@ -97,7 +95,7 @@ class ClientImplTest {
 
     @Test
     void testTrouverParIdOk() {
-        Commande commande1 = new Commande(1);
+
         Client client1 = new Client("Test1","Test1","test@email.fr");
         ClientResponseDto clientResponseDto = new ClientResponseDto(1, "Test", "Test","test@email.fr");
 
@@ -113,7 +111,7 @@ class ClientImplTest {
             """)
     @Test
     void testAfficherTousClients() {
-        Commande commande1 = new Commande(1);
+
         Client client1 = new Client("Test1", "Test1", "test@email.fr");
         Client client2 = new Client(1, "Test2", "Test2", "test@email.fr");
         List<Client> clients = List.of(client1, client2);

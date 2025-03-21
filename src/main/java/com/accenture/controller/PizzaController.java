@@ -1,6 +1,6 @@
 package com.accenture.controller;
 
-import com.accenture.service.Interface.PizzaService;
+import com.accenture.service.inter.PizzaService;
 import com.accenture.service.dto.IngredientRequestDto;
 
 import com.accenture.service.dto.PizzaRequestDto;
@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/pizzas")
-@Tag(name = "Gestion des Pizzas", description = "Interface de gestion des Pizzas")
+@Tag(name = "Gestion des Pizzas", description = "inter de gestion des Pizzas")
 public class PizzaController {
 
     private PizzaService pizzaService;
@@ -90,8 +90,20 @@ public class PizzaController {
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
     })
     @GetMapping()
-    ResponseEntity<List> trouverToutesParFiltre (@RequestParam (required = false) Filtre filtre){
+    ResponseEntity<List<PizzaResponseDto>> trouverToutesParFiltre (@RequestParam (required = false) Filtre filtre){
         List<PizzaResponseDto> liste = pizzaService.trouverToutes(filtre);
+        log.info("Trouver Pizzas : {}", liste);
+       return ResponseEntity.status(HttpStatus.OK).body(liste);
+    }
+
+    @Operation(summary = "Trouver Pizza par Ingredient")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pizzas trouvées"),
+            @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
+    })
+    @GetMapping("/ingredient/{id}")
+    ResponseEntity<List<PizzaResponseDto>> trouverToutesParIngredient(@PathVariable int id){
+        List<PizzaResponseDto> liste = pizzaService.trouverPizzaParIdIngredient(id);
         log.info("Trouver Pizzas : {}", liste);
        return ResponseEntity.status(HttpStatus.OK).body(liste);
     }
@@ -114,7 +126,7 @@ public class PizzaController {
             @ApiResponse(responseCode = "400", description = "Erreur Fonctionnelle")
     })
     @GetMapping("/nom")
-    ResponseEntity<List> trouverParNom (@RequestParam String nom){
+    ResponseEntity<List<PizzaResponseDto>> trouverParNom (@RequestParam String nom){
         List<PizzaResponseDto> liste = pizzaService.trouverParNom(nom);
         log.info("Trouver par nom : {}", liste );
         return ResponseEntity.ok(liste);

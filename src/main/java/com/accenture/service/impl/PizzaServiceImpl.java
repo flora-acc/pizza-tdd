@@ -1,11 +1,11 @@
-package com.accenture.service.Impl;
+package com.accenture.service.impl;
 
 import com.accenture.exception.PizzaException;
 import com.accenture.repository.IngredientDao;
 import com.accenture.repository.PizzaDao;
 import com.accenture.repository.model.Ingredient;
 import com.accenture.repository.model.Pizza;
-import com.accenture.service.Interface.PizzaService;
+import com.accenture.service.inter.PizzaService;
 import com.accenture.service.dto.PizzaRequestDto;
 import com.accenture.service.dto.PizzaResponseDto;
 import com.accenture.shared.Filtre;
@@ -86,7 +86,6 @@ public class PizzaServiceImpl implements PizzaService {
             log.error("Erreur trouverPizzaParIngredientId : {}", ex.getMessage());
             throw ex;
         }
-        Ingredient ingredient = optionalIngredient.get();
 
         List<Pizza> pizzas = pizzaDao.findByIngredientsId(ingredientId);
 

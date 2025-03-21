@@ -1,7 +1,6 @@
 package com.accenture.controller;
 
 import com.accenture.service.dto.PizzaRequestDto;
-import com.accenture.shared.Filtre;
 import com.accenture.shared.Taille;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;

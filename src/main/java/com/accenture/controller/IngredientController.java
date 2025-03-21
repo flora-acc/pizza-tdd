@@ -1,9 +1,8 @@
 package com.accenture.controller;
 
-import com.accenture.service.Interface.IngredientService;
+import com.accenture.service.inter.IngredientService;
 import com.accenture.service.dto.IngredientRequestDto;
 import com.accenture.service.dto.IngredientResponseDto;
-import com.accenture.shared.Filtre;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -24,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/ingredients")
 @Slf4j
-@Tag(name = "Gestion des Ingrédients", description = "Interface de gestion des Ingrédients")
+@Tag(name = "Gestion des Ingrédients", description = "inter de gestion des Ingrédients")
 public class IngredientController {
 
     private IngredientService ingredientService;

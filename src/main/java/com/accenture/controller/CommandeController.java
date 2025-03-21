@@ -1,6 +1,6 @@
 package com.accenture.controller;
 
-import com.accenture.service.Interface.CommandeService;
+import com.accenture.service.inter.CommandeService;
 import com.accenture.service.dto.CommandeRequestDto;
 import com.accenture.service.dto.CommandeResponseDto;
 import com.accenture.service.dto.IngredientRequestDto;
@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/commandes")
 @Slf4j
-@Tag(name = "Gestion des Commandes", description = "Interface de gestion des Commandes")
+@Tag(name = "Gestion des Commandes", description = "inter de gestion des Commandes")
 public class CommandeController {
 
     private CommandeService commandeService;
